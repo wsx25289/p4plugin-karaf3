@@ -1,0 +1,20 @@
+module p4plugin-driver-api {
+    yang-version 1;
+    namespace "urn:p4plugin:driver:api";
+    prefix "p4plugin-driver-api";
+
+    revision "2017-09-08" {
+        description "Initial revision of driver model";
+    }
+
+    rpc read-device-interface {
+        input {
+            leaf device-id {
+               type string;
+            }
+        }
+        output {
+
+        }
+    }
+}

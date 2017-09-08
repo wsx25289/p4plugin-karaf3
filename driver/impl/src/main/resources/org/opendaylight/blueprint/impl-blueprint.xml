@@ -15,10 +15,30 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
         interface="org.opendaylight.controller.md.sal.binding.api.DataBroker"
         odl:type="default" />
 
+    <reference id="mountService"
+               interface="org.opendaylight.controller.md.sal.binding.api.MountPointService" />
+
+    <bean id="netconfDataOperator"
+          class="org.opendaylight.p4plugin.driver.impl.NetconfDataOperator">
+        <argument ref="mountService" />
+    </bean>
+
+    <bean id="deviceInterfaceProcess"
+          class="org.opendaylight.p4plugin.driver.impl.DeviceInterfaceProcess">
+        <argument ref="netconfDataOperator" />
+    </bean>
+
+    <bean id="driverServiceImpl"
+          class="org.opendaylight.p4plugin.driver.impl.DriverServiceImpl">
+        <argument ref="deviceInterfaceProcess" />
+    </bean>
+    <odl:rpc-implementation ref="driverServiceImpl" />
+
     <bean id="provider" 
         class="org.opendaylight.p4plugin.driver.impl.DriverProvider"
         init-method="init" destroy-method="close">
         <argument ref="dataBroker" />
+        <argument ref="deviceInterfaceProcess" />
     </bean>
     
 </blueprint>

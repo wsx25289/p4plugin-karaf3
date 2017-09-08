@@ -7,6 +7,7 @@
  */
 package org.opendaylight.p4plugin.driver.impl;
 
+import java.util.Collection;
 import org.opendaylight.controller.md.sal.binding.api.DataObjectModification;
 import org.opendaylight.controller.md.sal.binding.api.DataTreeChangeListener;
 import org.opendaylight.controller.md.sal.binding.api.DataTreeModification;
@@ -22,18 +23,18 @@ import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
 
 public class NetconfStateChangeListener implements DataTreeChangeListener<Node> {
 
     private static final Logger LOG = LoggerFactory.getLogger(NetconfStateChangeListener.class);
 
+    private DeviceInterfaceProcess deviceInterfaceProcess;
     private static final InstanceIdentifier<Node> NODE_IID = InstanceIdentifier
             .create(NetworkTopology.class).child(Topology.class, new TopologyKey(new TopologyId(TopologyNetconf
                     .QNAME.getLocalName()))).child(Node.class);
 
-    public NetconfStateChangeListener() {
-
+    public NetconfStateChangeListener(DeviceInterfaceProcess deviceInterfaceProcess) {
+        this.deviceInterfaceProcess = deviceInterfaceProcess;
     }
 
     @Override
@@ -61,21 +62,22 @@ public class NetconfStateChangeListener implements DataTreeChangeListener<Node> 
 //            }
             switch (rootNode.getModificationType()) {
                 case WRITE:
-                    LOG.info("Node {} was created",rootNode.getDataAfter().getNodeId().getValue());
+                    LOG.info("Node {} was created", nodeAfter.getNodeId().getValue());
                     break;
                 case SUBTREE_MODIFIED:
-                    LOG.info("process modify procedure");
+                    LOG.info("Process modify procedure");
                     NetconfNode ncNodeNew = nodeAfter.getAugmentation(NetconfNode.class);
                     NetconfNode ncNodeOld = nodeBefore.getAugmentation(NetconfNode.class);
                     if ((ncNodeNew.getConnectionStatus() == NetconfNodeConnectionStatus.ConnectionStatus.Connected)
                             && (ncNodeOld.getConnectionStatus() != NetconfNodeConnectionStatus
                             .ConnectionStatus.Connected)) {
-                        LOG.info("Node {} was connected",rootNode.getDataAfter().getNodeId().getValue());
-                        //do something, such as start notification
+                        LOG.info("Node {} was connected", nodeAfter.getNodeId().getValue());
+                        LOG.info("Start write interfaces");
+                        deviceInterfaceProcess.writeDeviceInterfaces(nodeAfter.getNodeId().getValue());
                     }
                     break;
                 case DELETE:
-                    LOG.info("Node {} was deleted",rootNode.getDataBefore().getNodeId().getValue());
+                    LOG.info("Node {} was deleted", nodeBefore.getNodeId().getValue());
                     //do something, such as remove notification
                     break;
                 default:

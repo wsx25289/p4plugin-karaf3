@@ -17,23 +17,24 @@ import org.slf4j.LoggerFactory;
 public class DriverProvider {
     private static final Logger LOG = LoggerFactory.getLogger(DriverProvider.class);
     private final DataBroker dataBroker;
+    private DeviceInterfaceProcess deviceInterfaceProcess;
     private NetconfStateChangeListener netconfStateChangeListener;
 
-    public DriverProvider(final DataBroker dataBroker) {
+    public DriverProvider(final DataBroker dataBroker, DeviceInterfaceProcess deviceInterfaceProcess) {
         this.dataBroker = dataBroker;
+        this.deviceInterfaceProcess = deviceInterfaceProcess;
     }
-    
+
     /**
      * Method called when the blueprint container is created.
      */
     public void init() {
         LOG.info("register netconfstate listener");
-        netconfStateChangeListener = new NetconfStateChangeListener();
+        netconfStateChangeListener = new NetconfStateChangeListener(deviceInterfaceProcess);
         dataBroker.registerDataTreeChangeListener(new DataTreeIdentifier<Node>(
                 LogicalDatastoreType.OPERATIONAL, netconfStateChangeListener.getNodeId()), netconfStateChangeListener);
     }
-    
-    
+
     /**
      * Method called when the blueprint container is destroyed.
      */
