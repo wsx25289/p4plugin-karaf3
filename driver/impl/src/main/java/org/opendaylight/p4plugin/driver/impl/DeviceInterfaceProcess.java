@@ -7,7 +7,9 @@
  */
 package org.opendaylight.p4plugin.driver.impl;
 
-import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.interfaces.rev140508.Interfaces;
+import java.util.List;
+import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.InterfacesState;
+import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.interfaces.state.Interface;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +20,8 @@ public class DeviceInterfaceProcess {
 
     private NetconfDataOperator netconfDataOperator;
 
-    public static final InstanceIdentifier<Interfaces> INTERFACE_IID = InstanceIdentifier
-            .create(Interfaces.class);
+    public static final InstanceIdentifier<InterfacesState> INTERFACE_IID = InstanceIdentifier
+            .create(InterfacesState.class);
 
     public DeviceInterfaceProcess(NetconfDataOperator netconfDataOperator) {
         this.netconfDataOperator = netconfDataOperator;
@@ -30,8 +32,8 @@ public class DeviceInterfaceProcess {
         netconfDataOperator.write(nodeId, INTERFACE_IID);
     }
 
-    public void readDeviceInterfaces(String nodeId) {
+    public List<Interface> readDeviceInterfaces(String nodeId) {
         LOG.info("Start read data");
-        netconfDataOperator.read(nodeId, INTERFACE_IID);
+        return netconfDataOperator.read(nodeId, INTERFACE_IID);
     }
 }
