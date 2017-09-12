@@ -56,10 +56,10 @@ public class NetconfStateChangeListener implements DataTreeChangeListener<Node> 
                 LOG.info("Netconf node info null");
                 continue;
             }
-//            if (nodeInfo.getNodeId().getValue().equals("controller-config")) {
-//                LOG.info("Netconf node {} ignored",rootNode.getDataAfter().getNodeId().getValue());
-//                continue;
-//            }
+            if (nodeInfo.getNodeId().getValue().equals("controller-config")) {
+                LOG.info("Netconf node {} ignored",rootNode.getDataAfter().getNodeId().getValue());
+                continue;
+            }
             switch (rootNode.getModificationType()) {
                 case WRITE:
                     LOG.info("Node {} was created", nodeAfter.getNodeId().getValue());

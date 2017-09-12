@@ -68,7 +68,7 @@ public class NetconfDataOperator {
         }
         LOG.info("Construct data");
         InterfacesState data = constructInterfacesState();
-        LOG.info("Process write data");
+        LOG.info("Process write data, path is {}, data is {}", path, data);
         writeData(nodeDataBroker, path, data);
     }
 
@@ -119,16 +119,16 @@ public class NetconfDataOperator {
         interfaceBuilderOne.setName("InterfaceOne");
         interfaceBuilderOne.setOperStatus(Interface.OperStatus.Up);
         interfaceBuilderOne.setSpeed(new Gauge64(new BigInteger("819200")));
-        interfaceBuilderOne.setIpv4(constructIpv4("10.38.38.38/22", "10.39.39.39/21"));
-        interfaceBuilderOne.setIpv6(constructIpv6("fe80::7009::fe25::8170::36af/63", "fe81::7010::fe26::8171::36af/64"));
+        interfaceBuilderOne.setIpv4(constructIpv4("10.38.38.38", "10.39.39.39"));
+        //interfaceBuilderOne.setIpv6(constructIpv6("3ffe::1010:2a2a::0001", "fe81::7010::fe26::8171::36af"));
 
         InterfaceBuilder interfaceBuilderTwo = new InterfaceBuilder();
         interfaceBuilderTwo.setKey(new InterfaceKey("InterfaceTwo"));
         interfaceBuilderTwo.setName("InterfaceTwo");
         interfaceBuilderTwo.setOperStatus(Interface.OperStatus.Up);
         interfaceBuilderTwo.setSpeed(new Gauge64(new BigInteger("819200")));
-        interfaceBuilderTwo.setIpv4(constructIpv4("10.40.40.40/22", "10.41.41.41/21"));
-        interfaceBuilderTwo.setIpv6(constructIpv6("fe82::7011::fe27::8172::36af/63", "fe83::7012::fe28::8173::36af/64"));
+        interfaceBuilderTwo.setIpv4(constructIpv4("10.40.40.40", "10.41.41.41"));
+        //interfaceBuilderTwo.setIpv6(constructIpv6("fe82::7011::fe27::8172::36af", "fe83::7012::fe28::8173::36af"));
 
         List<Interface> list = new ArrayList<>();
         list.add(interfaceBuilderOne.build());
@@ -180,7 +180,9 @@ public class NetconfDataOperator {
 
     private void writeData(DataBroker dataBroker, InstanceIdentifier<InterfacesState> path, InterfacesState data) {
         final WriteTransaction writeTransaction = dataBroker.newWriteOnlyTransaction();
+        LOG.info("Start write data to dataStore");
         writeTransaction.merge(LogicalDatastoreType.CONFIGURATION, path, data, true);
+        LOG.info("Submit");
         writeTransaction.submit();
     }
 
