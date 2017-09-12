@@ -120,7 +120,8 @@ public class NetconfDataOperator {
         interfaceBuilderOne.setOperStatus(Interface.OperStatus.Up);
         interfaceBuilderOne.setSpeed(new Gauge64(new BigInteger("819200")));
         interfaceBuilderOne.setIpv4(constructIpv4("10.38.38.38", "10.39.39.39"));
-        //interfaceBuilderOne.setIpv6(constructIpv6("3ffe::1010:2a2a::0001", "fe81::7010::fe26::8171::36af"));
+        interfaceBuilderOne.setIpv6(constructIpv6("3ffe:0000:0000:0000:1010:2a2a:0000:0001",
+                "3ffe:0000:0000:0000:1010:3a3a:0000:0002"));
 
         InterfaceBuilder interfaceBuilderTwo = new InterfaceBuilder();
         interfaceBuilderTwo.setKey(new InterfaceKey("InterfaceTwo"));
@@ -128,7 +129,8 @@ public class NetconfDataOperator {
         interfaceBuilderTwo.setOperStatus(Interface.OperStatus.Up);
         interfaceBuilderTwo.setSpeed(new Gauge64(new BigInteger("819200")));
         interfaceBuilderTwo.setIpv4(constructIpv4("10.40.40.40", "10.41.41.41"));
-        //interfaceBuilderTwo.setIpv6(constructIpv6("fe82::7011::fe27::8172::36af", "fe83::7012::fe28::8173::36af"));
+        interfaceBuilderTwo.setIpv6(constructIpv6("3ffe:0000:0000:0000:1010:4a4a:0000:0003",
+                "3ffe:0000:0000:0000:1010:5a5a:0000:0004"));
 
         List<Interface> list = new ArrayList<>();
         list.add(interfaceBuilderOne.build());

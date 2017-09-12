@@ -73,7 +73,7 @@ public class DriverServiceImpl implements P4pluginDriverApiService {
         builder.setPortOperStatus(DeviceInterface.PortOperStatus.forValue(m.getOperStatus().getIntValue()));
         builder.setBandWidth(m.getSpeed());
         builder.setPortIpv4(constructOutputIpv4(m.getIpv4()));
-        //builder.setPortIpv6(constructOutputIpv6(m.getIpv6()));
+        builder.setPortIpv6(constructOutputIpv6(m.getIpv6()));
         return builder.build();
     }
 
