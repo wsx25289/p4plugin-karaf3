@@ -1,0 +1,311 @@
+module p4plugin-core {
+    yang-version 1;
+    namespace "urn:opendaylight:p4plugin:core";
+    prefix "core";
+
+    organization
+        "ZTE corporation";
+
+    contact
+        "ding.rui@zte.com.cn";
+
+    description
+        "This module contains a set of type definitions and
+         RPCs that are used across p4plugin";
+
+    revision "2017-08-08" {
+        description "Initial revision.";
+    }
+
+    import ietf-inet-types {
+        prefix "inet";
+        revision-date 2013-07-15;
+    }
+
+    typedef known-update-type {
+        type enumeration {
+            enum "UNSPECIFIED"  {
+                value 1;
+            }
+
+            enum "INSERT" {
+                value 2;
+            }
+
+            enum "MODIFY" {
+                value 3;
+            }
+
+            enum "DELETE" {
+                value 4;
+            }
+        }
+    }
+
+    grouping rpc-result {
+        leaf result {
+            type boolean;
+            default false;
+        }
+    }
+
+    grouping device-identifier {
+        leaf Ip {
+            type inet:ipv4-address;
+            mandatory true;
+            description
+                "gRPC channel address, only support ipv4 now.";
+        }
+
+        leaf Port {
+            type inet:port-number;
+            mandatory true;
+            description
+                "gRPC channel port.";
+        }
+
+        leaf Device-Id {
+            type uint64;
+            mandatory true;
+            description
+                "This is the logic-id of a specific P4 target. For bmv2, you
+                can use --device-id to indicate the device-id.";
+        }
+    }
+
+    grouping action-definition {
+        leaf Action {
+            type string;
+            mandatory true;
+        }
+
+        list Params {
+            key "Name";
+            leaf Name {
+                type string;
+                mandatory true;
+            }
+
+            leaf Value {
+                type string;
+                mandatory true;
+            }
+        }
+    }
+
+    grouping match-fields-definition {
+        list Match-Fields {
+            key "Field";
+            leaf Field {
+                type string;
+                mandatory true;
+            }
+
+            choice Match-Type {
+                default EXACT;
+                case EXACT {
+                    leaf Exact-Value {
+                        type string;
+                        mandatory true;
+                    }
+                }
+
+                case TERNARY {
+                    leaf Ternary-Value {
+                        type string;
+                        mandatory true;
+                    }
+
+                    leaf Ternary-Mask {
+                        type string {
+                            pattern '([1-9]|[1-2][0-9]|3[0-2])|'                          +
+                                    '((([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|'        +
+                                    '25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4]'  +
+                                    '[0-9]|25[0-5]))';
+                        }
+                        mandatory true;
+                    }
+                }
+
+                case LPM {
+                    leaf Lpm-Value {
+                        type string;
+                        mandatory true;
+                    }
+
+                    leaf Lpm-PrefixLen {
+                        type uint8 {
+                            range 0..32;
+                        }
+                        mandatory true;
+                   }
+                }
+
+                case RANGE {
+                    leaf Range-High {
+                        type uint32;
+                        mandatory true;
+                    }
+
+                    leaf Range-Low {
+                        type uint32;
+                        mandatory true;
+                    }
+                }
+
+                case VALID {
+                    leaf Valid {
+                        type boolean;
+                        mandatory true;
+                    }
+                }
+            }
+        }
+    }
+
+    grouping table-entry-definition {
+        leaf Table {
+            type string;
+            mandatory true;
+        }
+        uses match-fields-definition;
+        uses action-definition;
+    }
+
+    grouping packet-payload {
+        leaf payload {
+            type binary;
+        }
+    }
+
+    grouping device-config {
+        leaf Config-File {
+            type string;
+            mandatory true;
+        }
+    }
+
+    grouping runtime-info {
+        leaf Runtime-File {
+            type string;
+            mandatory true;
+        }
+    }
+
+    grouping update-type {
+        leaf Operation {
+            type known-update-type;
+            mandatory true;
+        }
+    }
+
+    grouping action-profile-member {
+        leaf Action-Profile {
+            type string;
+        }
+
+        leaf Member-Id {
+            type uint32;
+        }
+        uses action-definition;
+    }
+
+    rpc set-pipeline-config {
+        input {
+            uses device-identifier;
+            uses device-config;
+            uses runtime-info;
+        }
+
+        output {
+            uses rpc-result;
+        }
+    }
+
+    rpc get-pipeline-config {
+        input {
+            uses device-identifier;
+        }
+
+        output {
+            uses rpc-result;
+            leaf Content {
+                type string;
+            }
+        }
+    }
+
+    rpc write-table-entry {
+        input {
+            uses device-identifier;
+            uses update-type;
+            uses table-entry-definition;
+        }
+
+        output {
+            uses rpc-result;
+        }
+    }
+
+    rpc read-table-entry {
+        input {
+            uses device-identifier;
+            choice Read-Entry-Type {
+                default ALL-TABLES;
+                case ALL-TABLES {}
+
+                case ONE-TABLE {
+                    leaf Table {
+                        type string;
+                        mandatory true;
+                    }
+                }
+            }
+        }
+
+        output {
+            uses rpc-result;
+            leaf-list Content {
+                type string; //Need to improve;
+            }
+        }
+    }
+
+    rpc write-action-profile-member {
+        input {
+            uses device-identifier;
+            uses update-type;
+            uses action-profile-member;
+        }
+
+        output {
+            uses rpc-result;
+        }
+    }
+
+    rpc read-action-profile-member {
+        input {
+            uses device-identifier;
+            choice Read-Member-Type {
+                default ALL-MEMBERS;
+                case ALL-MEMBERS {}
+                case ONE-MEMBER {
+                    leaf member-name {
+                        type string;
+                    }
+                }
+            }
+        }
+
+        output {
+            uses rpc-result;
+            leaf-list Member {
+                type string;
+            }
+        }
+    }
+
+    notification p4-packet-received {
+        uses packet-payload;
+    }
+}
