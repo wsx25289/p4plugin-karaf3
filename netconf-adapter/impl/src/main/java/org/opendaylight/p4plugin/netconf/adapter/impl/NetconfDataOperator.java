@@ -18,8 +18,8 @@ import org.opendaylight.controller.md.sal.binding.api.ReadTransaction;
 import org.opendaylight.controller.md.sal.binding.api.WriteTransaction;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
 import org.opendaylight.controller.md.sal.common.api.data.ReadFailedException;
-import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.InterfacesState;
-import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.InterfacesStateBuilder;
+import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.NodeInterfacesState;
+import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.NodeInterfacesStateBuilder;
 import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.interfaces.state.Interface;
 import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.interfaces.state.InterfaceBuilder;
 import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.interfaces.state.InterfaceKey;
@@ -30,8 +30,11 @@ import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.interface
 import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.interfaces.state._interface.ipv4.Address;
 import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.interfaces.state._interface.ipv4.AddressBuilder;
 import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.interfaces.state._interface.ipv4.AddressKey;
+import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.node.interfaces.state.NodeBuilder;
+import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev130715.Ipv4Address;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev130715.Ipv4AddressNoZone;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev130715.Ipv6AddressNoZone;
+import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.inet.types.rev130715.PortNumber;
 import org.opendaylight.yang.gen.v1.urn.ietf.params.xml.ns.yang.ietf.yang.types.rev130715.Gauge64;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.netconf.node.topology.rev150114.network.topology.topology.topology.types.TopologyNetconf;
 import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.rev131021.NetworkTopology;
@@ -59,7 +62,7 @@ public class NetconfDataOperator {
         this.mountPointService = mountPointService;
     }
 
-    public void write(String nodeId, InstanceIdentifier<InterfacesState> path) {
+    public void write(String nodeId, InstanceIdentifier<NodeInterfacesState> path) {
         LOG.info("Get dataBroker");
         final DataBroker nodeDataBroker = getDataBroker(nodeId, mountPointService);
         if (null == nodeDataBroker) {
@@ -67,12 +70,12 @@ public class NetconfDataOperator {
             return;
         }
         LOG.info("Construct data");
-        InterfacesState data = constructInterfacesState();
+        NodeInterfacesState data = constructInterfacesState(nodeId);
         LOG.info("Process write data, path is {}, data is {}", path, data);
         writeData(nodeDataBroker, path, data);
     }
 
-    public List<Interface> read(String nodeId, InstanceIdentifier<InterfacesState> path) {
+    public NodeInterfacesState read(String nodeId, InstanceIdentifier<NodeInterfacesState> path) {
         LOG.info("Get dataBroker");
         final DataBroker nodeDataBroker = getDataBroker(nodeId, mountPointService);
         if (null == nodeDataBroker) {
@@ -113,7 +116,15 @@ public class NetconfDataOperator {
         return nodeMountPoint.get();
     }
 
-    private InterfacesState constructInterfacesState() {
+    private NodeInterfacesState constructInterfacesState(String nodeId) {
+        NodeBuilder nodeBuilder = new NodeBuilder();
+        nodeBuilder.setKey(new org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.node.interfaces
+                .state.NodeKey(nodeId));
+        nodeBuilder.setNodeId(nodeId);
+        nodeBuilder.setGrpcServerIp(new Ipv4Address("127.0.0.1"));
+        nodeBuilder.setGrpcServerPort(new PortNumber(new Integer(50051)));
+        nodeBuilder.setDeviceId(new BigInteger("0"));
+
         InterfaceBuilder interfaceBuilderOne = new InterfaceBuilder();
         interfaceBuilderOne.setKey(new InterfaceKey("InterfaceOne"));
         interfaceBuilderOne.setName("InterfaceOne");
@@ -135,9 +146,14 @@ public class NetconfDataOperator {
         List<Interface> list = new ArrayList<>();
         list.add(interfaceBuilderOne.build());
         list.add(interfaceBuilderTwo.build());
+        nodeBuilder.setInterface(list);
 
-        InterfacesStateBuilder stateBuilder = new InterfacesStateBuilder();
-        stateBuilder.setInterface(list);
+        List<org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.node.interfaces.state.Node>
+                nodeList = new ArrayList<>();
+        nodeList.add(nodeBuilder.build());
+
+        NodeInterfacesStateBuilder stateBuilder = new NodeInterfacesStateBuilder();
+        stateBuilder.setNode(nodeList);
         return stateBuilder.build();
     }
 
@@ -180,7 +196,8 @@ public class NetconfDataOperator {
         return ipv6Builder.build();
     }
 
-    private void writeData(DataBroker dataBroker, InstanceIdentifier<InterfacesState> path, InterfacesState data) {
+    private void writeData(DataBroker dataBroker, InstanceIdentifier<NodeInterfacesState> path,
+                           NodeInterfacesState data) {
         final WriteTransaction writeTransaction = dataBroker.newWriteOnlyTransaction();
         LOG.info("Start write data to dataStore");
         writeTransaction.merge(LogicalDatastoreType.CONFIGURATION, path, data, true);
@@ -188,24 +205,20 @@ public class NetconfDataOperator {
         writeTransaction.submit();
     }
 
-    private List<Interface> readData(DataBroker dataBroker, InstanceIdentifier<InterfacesState> path) {
+    private NodeInterfacesState readData(DataBroker dataBroker, InstanceIdentifier<NodeInterfacesState> path) {
         final ReadTransaction readTransaction = dataBroker.newReadOnlyTransaction();
-        Optional<InterfacesState> interfaces = null;
-        InterfacesState interfacesData = null;
+        Optional<NodeInterfacesState> interfaces = null;
+        NodeInterfacesState interfacesData = null;
         try {
             interfaces = readTransaction.read(LogicalDatastoreType.CONFIGURATION, path).checkedGet();
             if (interfaces.isPresent()) {
-                LOG.info("InterfacesState is not null");
-                interfacesData = interfaces.get();
-                if (null != interfacesData.getInterface() && 0 != interfacesData.getInterface().size()) {
-                    LOG.info("Interfaces are not null");
-                    return interfacesData.getInterface();
-                }
+                LOG.info("NodeInterfacesState is not null");
+                return interfaces.get();
             }
         } catch (ReadFailedException e) {
             LOG.warn("Failed to read {} ", path, e);
         }
-        LOG.info("InterfacesState is null");
+        LOG.info("NodeInterfacesState is null");
         return null;
     }
 }

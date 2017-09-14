@@ -8,9 +8,11 @@
 package org.opendaylight.p4plugin.netconf.adapter.impl;
 
 import java.util.Collection;
+import java.util.List;
 import org.opendaylight.controller.md.sal.binding.api.DataObjectModification;
 import org.opendaylight.controller.md.sal.binding.api.DataTreeChangeListener;
 import org.opendaylight.controller.md.sal.binding.api.DataTreeModification;
+import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.NodeInterfacesState;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.netconf.node.topology.rev150114.NetconfNode;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.netconf.node.topology.rev150114.NetconfNodeConnectionStatus;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.netconf.node.topology.rev150114.network.topology.topology.topology.types.TopologyNetconf;
@@ -74,6 +76,16 @@ public class NetconfStateChangeListener implements DataTreeChangeListener<Node> 
                         LOG.info("Node {} was connected", nodeAfter.getNodeId().getValue());
                         LOG.info("Start write interfaces");
                         deviceInterfaceProcess.writeDeviceInterfaces(nodeAfter.getNodeId().getValue());
+
+                        LOG.info("Start read interfaces");
+                        NodeInterfacesState interfacesData = deviceInterfaceProcess
+                                .readDeviceInterfaces(nodeAfter.getNodeId().getValue());
+                        if (null == interfacesData) {
+                            LOG.info("InterFacesData is null");
+                        }
+                        if (null != interfacesData.getNode() && 0 != interfacesData.getNode().size()) {
+                            LOG.info("NodeList from device is {}", interfacesData.getNode());
+                        }
                     }
                     break;
                 case DELETE:

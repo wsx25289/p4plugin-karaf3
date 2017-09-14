@@ -8,7 +8,7 @@
 package org.opendaylight.p4plugin.netconf.adapter.impl;
 
 import java.util.List;
-import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.InterfacesState;
+import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.NodeInterfacesState;
 import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.interfaces.state.Interface;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.slf4j.Logger;
@@ -20,8 +20,8 @@ public class DeviceInterfaceProcess {
 
     private NetconfDataOperator netconfDataOperator;
 
-    public static final InstanceIdentifier<InterfacesState> INTERFACE_IID = InstanceIdentifier
-            .create(InterfacesState.class);
+    public static final InstanceIdentifier<NodeInterfacesState> NODE_INTERFACE_IID = InstanceIdentifier
+            .create(NodeInterfacesState.class);
 
     public DeviceInterfaceProcess(NetconfDataOperator netconfDataOperator) {
         this.netconfDataOperator = netconfDataOperator;
@@ -29,11 +29,11 @@ public class DeviceInterfaceProcess {
 
     public void writeDeviceInterfaces(String nodeId) {
         LOG.info("Start write data");
-        netconfDataOperator.write(nodeId, INTERFACE_IID);
+        netconfDataOperator.write(nodeId, NODE_INTERFACE_IID);
     }
 
-    public List<Interface> readDeviceInterfaces(String nodeId) {
+    public NodeInterfacesState readDeviceInterfaces(String nodeId) {
         LOG.info("Start read data");
-        return netconfDataOperator.read(nodeId, INTERFACE_IID);
+        return netconfDataOperator.read(nodeId, NODE_INTERFACE_IID);
     }
 }

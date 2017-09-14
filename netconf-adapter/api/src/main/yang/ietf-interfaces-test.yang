@@ -133,11 +133,12 @@
 
     }
 
-    container interfaces-state {
+    grouping interfaces-state {
       description
         "Data nodes for the operational state of interfaces.";
       list interface {
         key "name";
+        ordered-by user;
         description
           "The list of interfaces on the device.
 
@@ -354,6 +355,7 @@
           
           list address {
             key "ip";
+            ordered-by user;
             description
               "The list of IPv4 addresses on the interface.";
 
@@ -393,6 +395,7 @@
           
           list neighbor {
             key "ip";
+            ordered-by user;
             description
               "A list of mappings from IPv4 addresses to
                link-layer addresses.
@@ -451,6 +454,7 @@
           
           list address {
             key "ip";
+            ordered-by user;
             description
               "The list of IPv6 addresses on the interface.";
 
@@ -537,6 +541,7 @@
           
           list neighbor {
             key "ip";
+            ordered-by user;
             description
               "A list of mappings from IPv6 addresses to
                link-layer addresses.
@@ -609,7 +614,36 @@
                            Section 7.3.2";
             }
           }
-        } //container ipv6
-      }  // list interface
-    }  // container interfaces-state
-  }  // module ietf-interfaces
+        } // container ipv6
+      }  // list interface          
+    }  // grouping interfaces-state
+
+    grouping p4-device {
+       leaf node-id {
+         type string;
+       }
+
+       leaf grpc-server-ip {
+         type inet:ipv4-address;
+       }
+
+       leaf grpc-server-port {
+         type inet:port-number;
+       }
+
+       leaf device-id {
+         type uint64;
+       }
+    }
+    
+    container node-interfaces-state {
+       list node {
+         key "node-id";
+         ordered-by user;
+
+         uses p4-device;
+
+         uses interfaces-state;       
+       } // list node
+    } // container node-interfaces-state  
+  }  // module ietf-interfaces-test
