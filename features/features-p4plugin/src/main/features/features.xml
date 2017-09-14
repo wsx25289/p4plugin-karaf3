@@ -17,15 +17,15 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     <repository>mvn:org.opendaylight.dluxapps/features-dluxapps/{{VERSION}}/xml/features</repository>
 
     <feature name='odl-p4plugin-all' version='${project.version}' description='ODL :: p4plugin :: all'>
-    	<feature version='${project.version}'>odl-p4plugin-driver</feature>
+    	<feature version='${project.version}'>odl-p4plugin-netconf-adapter</feature>
     	<feature version='${project.version}'>odl-p4plugin-core</feature>
     </feature>
 
-    <feature name='odl-p4plugin-driver' version='${project.version}' description='ODL :: p4plugin :: driver'>
+    <feature name='odl-p4plugin-netconf-adapter' version='${project.version}' description='ODL :: p4plugin :: netconf :: adapter'>
     	<feature version='${mdsal.version}'>odl-mdsal-all</feature>
     	<feature version='${netconf.version}'>odl-netconf-connector-all</feature>
-    	<bundle>mvn:org.opendaylight.p4plugin/p4plugin-driver-api/{{VERSION}}</bundle>
-    	<bundle>mvn:org.opendaylight.p4plugin/p4plugin-driver-impl/{{VERSION}}</bundle>
+    	<bundle>mvn:org.opendaylight.p4plugin/p4plugin-netconf-adapter-api/{{VERSION}}</bundle>
+    	<bundle>mvn:org.opendaylight.p4plugin/p4plugin-netconf-adapter-impl/{{VERSION}}</bundle>
     </feature>
 
     <feature name='odl-p4plugin-core' version='${project.version}' description='ODL :: p4plugin :: core'>

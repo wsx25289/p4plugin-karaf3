@@ -19,23 +19,23 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
                interface="org.opendaylight.controller.md.sal.binding.api.MountPointService" />
 
     <bean id="netconfDataOperator"
-          class="org.opendaylight.p4plugin.driver.impl.NetconfDataOperator">
+          class="org.opendaylight.p4plugin.netconf.adapter.impl.NetconfDataOperator">
         <argument ref="mountService" />
     </bean>
 
     <bean id="deviceInterfaceProcess"
-          class="org.opendaylight.p4plugin.driver.impl.DeviceInterfaceProcess">
+          class="org.opendaylight.p4plugin.netconf.adapter.impl.DeviceInterfaceProcess">
         <argument ref="netconfDataOperator" />
     </bean>
 
-    <bean id="driverServiceImpl"
-          class="org.opendaylight.p4plugin.driver.impl.DriverServiceImpl">
+    <bean id="netconfAdapterServiceImpl"
+          class="org.opendaylight.p4plugin.netconf.adapter.impl.NetconfAdapterServiceImpl">
         <argument ref="deviceInterfaceProcess" />
     </bean>
-    <odl:rpc-implementation ref="driverServiceImpl" />
+    <odl:rpc-implementation ref="netconfAdapterServiceImpl" />
 
     <bean id="provider" 
-        class="org.opendaylight.p4plugin.driver.impl.DriverProvider"
+        class="org.opendaylight.p4plugin.netconf.adapter.impl.NetconfAdapterProvider"
         init-method="init" destroy-method="close">
         <argument ref="dataBroker" />
         <argument ref="deviceInterfaceProcess" />

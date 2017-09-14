@@ -5,7 +5,7 @@
  * terms of the Eclipse Public License v1.0 which accompanies this distribution,
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  */
-package org.opendaylight.p4plugin.driver.impl;
+package org.opendaylight.p4plugin.netconf.adapter.impl;
 
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 import org.opendaylight.controller.md.sal.binding.api.DataTreeIdentifier;
@@ -14,13 +14,13 @@ import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DriverProvider {
-    private static final Logger LOG = LoggerFactory.getLogger(DriverProvider.class);
+public class NetconfAdapterProvider {
+    private static final Logger LOG = LoggerFactory.getLogger(NetconfAdapterProvider.class);
     private final DataBroker dataBroker;
     private DeviceInterfaceProcess deviceInterfaceProcess;
     private NetconfStateChangeListener netconfStateChangeListener;
 
-    public DriverProvider(final DataBroker dataBroker, DeviceInterfaceProcess deviceInterfaceProcess) {
+    public NetconfAdapterProvider(final DataBroker dataBroker, DeviceInterfaceProcess deviceInterfaceProcess) {
         this.dataBroker = dataBroker;
         this.deviceInterfaceProcess = deviceInterfaceProcess;
     }

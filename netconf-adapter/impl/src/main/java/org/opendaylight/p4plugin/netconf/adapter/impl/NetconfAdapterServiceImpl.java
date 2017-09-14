@@ -5,7 +5,7 @@
  * terms of the Eclipse Public License v1.0 which accompanies this distribution,
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  */
-package org.opendaylight.p4plugin.driver.impl;
+package org.opendaylight.p4plugin.netconf.adapter.impl;
 
 import com.google.common.util.concurrent.Futures;
 
@@ -16,36 +16,36 @@ import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.interface
 import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.interfaces.state._interface.Ipv4;
 import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.interfaces.state._interface.Ipv6;
 import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.interfaces.state._interface.ipv4.Address;
-import org.opendaylight.yang.gen.v1.urn.p4plugin.driver.api.rev170908.P4pluginDriverApiService;
-import org.opendaylight.yang.gen.v1.urn.p4plugin.driver.api.rev170908.ReadDeviceInterfaceInput;
-import org.opendaylight.yang.gen.v1.urn.p4plugin.driver.api.rev170908.ReadDeviceInterfaceOutput;
-import org.opendaylight.yang.gen.v1.urn.p4plugin.driver.api.rev170908.ReadDeviceInterfaceOutputBuilder;
-import org.opendaylight.yang.gen.v1.urn.p4plugin.driver.api.rev170908.read.device._interface.output.DeviceInterface;
-import org.opendaylight.yang.gen.v1.urn.p4plugin.driver.api.rev170908.read.device._interface.output.DeviceInterfaceBuilder;
-import org.opendaylight.yang.gen.v1.urn.p4plugin.driver.api.rev170908.read.device._interface.output.DeviceInterfaceKey;
-import org.opendaylight.yang.gen.v1.urn.p4plugin.driver.api.rev170908.read.device._interface.output.device._interface.PortIpv4;
-import org.opendaylight.yang.gen.v1.urn.p4plugin.driver.api.rev170908.read.device._interface.output.device._interface.PortIpv4Builder;
-import org.opendaylight.yang.gen.v1.urn.p4plugin.driver.api.rev170908.read.device._interface.output.device._interface.PortIpv6;
-import org.opendaylight.yang.gen.v1.urn.p4plugin.driver.api.rev170908.read.device._interface.output.device._interface.PortIpv6Builder;
-import org.opendaylight.yang.gen.v1.urn.p4plugin.driver.api.rev170908.read.device._interface.output.device._interface.port.ipv4.Ipv4Address;
-import org.opendaylight.yang.gen.v1.urn.p4plugin.driver.api.rev170908.read.device._interface.output.device._interface.port.ipv4.Ipv4AddressBuilder;
-import org.opendaylight.yang.gen.v1.urn.p4plugin.driver.api.rev170908.read.device._interface.output.device._interface.port.ipv4.Ipv4AddressKey;
-import org.opendaylight.yang.gen.v1.urn.p4plugin.driver.api.rev170908.read.device._interface.output.device._interface.port.ipv6.Ipv6Address;
-import org.opendaylight.yang.gen.v1.urn.p4plugin.driver.api.rev170908.read.device._interface.output.device._interface.port.ipv6.Ipv6AddressBuilder;
-import org.opendaylight.yang.gen.v1.urn.p4plugin.driver.api.rev170908.read.device._interface.output.device._interface.port.ipv6.Ipv6AddressKey;
+import org.opendaylight.yang.gen.v1.urn.p4plugin.netconf.adapter.api.rev170908.P4pluginNetconfAdapterApiService;
+import org.opendaylight.yang.gen.v1.urn.p4plugin.netconf.adapter.api.rev170908.ReadDeviceInterfaceInput;
+import org.opendaylight.yang.gen.v1.urn.p4plugin.netconf.adapter.api.rev170908.ReadDeviceInterfaceOutput;
+import org.opendaylight.yang.gen.v1.urn.p4plugin.netconf.adapter.api.rev170908.ReadDeviceInterfaceOutputBuilder;
+import org.opendaylight.yang.gen.v1.urn.p4plugin.netconf.adapter.api.rev170908.read.device._interface.output.DeviceInterface;
+import org.opendaylight.yang.gen.v1.urn.p4plugin.netconf.adapter.api.rev170908.read.device._interface.output.DeviceInterfaceBuilder;
+import org.opendaylight.yang.gen.v1.urn.p4plugin.netconf.adapter.api.rev170908.read.device._interface.output.DeviceInterfaceKey;
+import org.opendaylight.yang.gen.v1.urn.p4plugin.netconf.adapter.api.rev170908.read.device._interface.output.device._interface.PortIpv4;
+import org.opendaylight.yang.gen.v1.urn.p4plugin.netconf.adapter.api.rev170908.read.device._interface.output.device._interface.PortIpv4Builder;
+import org.opendaylight.yang.gen.v1.urn.p4plugin.netconf.adapter.api.rev170908.read.device._interface.output.device._interface.PortIpv6;
+import org.opendaylight.yang.gen.v1.urn.p4plugin.netconf.adapter.api.rev170908.read.device._interface.output.device._interface.PortIpv6Builder;
+import org.opendaylight.yang.gen.v1.urn.p4plugin.netconf.adapter.api.rev170908.read.device._interface.output.device._interface.port.ipv4.Ipv4Address;
+import org.opendaylight.yang.gen.v1.urn.p4plugin.netconf.adapter.api.rev170908.read.device._interface.output.device._interface.port.ipv4.Ipv4AddressBuilder;
+import org.opendaylight.yang.gen.v1.urn.p4plugin.netconf.adapter.api.rev170908.read.device._interface.output.device._interface.port.ipv4.Ipv4AddressKey;
+import org.opendaylight.yang.gen.v1.urn.p4plugin.netconf.adapter.api.rev170908.read.device._interface.output.device._interface.port.ipv6.Ipv6Address;
+import org.opendaylight.yang.gen.v1.urn.p4plugin.netconf.adapter.api.rev170908.read.device._interface.output.device._interface.port.ipv6.Ipv6AddressBuilder;
+import org.opendaylight.yang.gen.v1.urn.p4plugin.netconf.adapter.api.rev170908.read.device._interface.output.device._interface.port.ipv6.Ipv6AddressKey;
 import org.opendaylight.yangtools.yang.common.RpcError;
 import org.opendaylight.yangtools.yang.common.RpcResult;
 import org.opendaylight.yangtools.yang.common.RpcResultBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DriverServiceImpl implements P4pluginDriverApiService {
+public class NetconfAdapterServiceImpl implements P4pluginNetconfAdapterApiService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DriverServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NetconfAdapterServiceImpl.class);
 
     private DeviceInterfaceProcess deviceInterfaceProcess;
 
-    public DriverServiceImpl(DeviceInterfaceProcess deviceInterfaceProcess) {
+    public NetconfAdapterServiceImpl(DeviceInterfaceProcess deviceInterfaceProcess) {
         this.deviceInterfaceProcess = deviceInterfaceProcess;
     }
 
