@@ -17,12 +17,12 @@ import org.slf4j.LoggerFactory;
 public class NetconfAdapterProvider {
     private static final Logger LOG = LoggerFactory.getLogger(NetconfAdapterProvider.class);
     private final DataBroker dataBroker;
-    private DeviceInterfaceProcess deviceInterfaceProcess;
+    private DeviceInterfaceDataOperator deviceInterfaceDataOperator;
     private NetconfStateChangeListener netconfStateChangeListener;
 
-    public NetconfAdapterProvider(final DataBroker dataBroker, DeviceInterfaceProcess deviceInterfaceProcess) {
+    public NetconfAdapterProvider(final DataBroker dataBroker, DeviceInterfaceDataOperator deviceInterfaceDataOperator) {
         this.dataBroker = dataBroker;
-        this.deviceInterfaceProcess = deviceInterfaceProcess;
+        this.deviceInterfaceDataOperator = deviceInterfaceDataOperator;
     }
 
     /**
@@ -30,7 +30,7 @@ public class NetconfAdapterProvider {
      */
     public void init() {
         LOG.info("register netconfstate listener");
-        netconfStateChangeListener = new NetconfStateChangeListener(deviceInterfaceProcess);
+        netconfStateChangeListener = new NetconfStateChangeListener(deviceInterfaceDataOperator);
         dataBroker.registerDataTreeChangeListener(new DataTreeIdentifier<Node>(
                 LogicalDatastoreType.OPERATIONAL, netconfStateChangeListener.getNodeId()), netconfStateChangeListener);
     }

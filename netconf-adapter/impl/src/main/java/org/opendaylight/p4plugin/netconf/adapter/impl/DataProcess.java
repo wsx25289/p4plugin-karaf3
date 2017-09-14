@@ -48,21 +48,23 @@ import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class NetconfDataOperator {
+public class DataProcess {
 
-    private static final Logger LOG = LoggerFactory.getLogger(NetconfDataOperator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DataProcess.class);
 
+    private final DataBroker dataBroker;
     private MountPointService mountPointService = null;
 
     private static final InstanceIdentifier<Topology> NETCONF_TOPO_IID = InstanceIdentifier
             .create(NetworkTopology.class).child(Topology.class,
                     new TopologyKey(new TopologyId(TopologyNetconf.QNAME.getLocalName())));
 
-    public NetconfDataOperator(MountPointService mountPointService) {
+    public DataProcess(DataBroker dataBroker, MountPointService mountPointService) {
+        this.dataBroker = dataBroker;
         this.mountPointService = mountPointService;
     }
 
-    public void write(String nodeId, InstanceIdentifier<NodeInterfacesState> path) {
+    public void writeToDevice(String nodeId, InstanceIdentifier<NodeInterfacesState> path) {
         LOG.info("Get dataBroker");
         final DataBroker nodeDataBroker = getDataBroker(nodeId, mountPointService);
         if (null == nodeDataBroker) {
@@ -75,7 +77,7 @@ public class NetconfDataOperator {
         writeData(nodeDataBroker, path, data);
     }
 
-    public NodeInterfacesState read(String nodeId, InstanceIdentifier<NodeInterfacesState> path) {
+    public NodeInterfacesState readFromDevice(String nodeId, InstanceIdentifier<NodeInterfacesState> path) {
         LOG.info("Get dataBroker");
         final DataBroker nodeDataBroker = getDataBroker(nodeId, mountPointService);
         if (null == nodeDataBroker) {
@@ -84,6 +86,23 @@ public class NetconfDataOperator {
         }
         LOG.info("Process read data");
         return readData(nodeDataBroker, path);
+    }
+
+    public NodeInterfacesState readFromDataStore(InstanceIdentifier<NodeInterfacesState> path) {
+        final ReadTransaction readTransaction = dataBroker.newReadOnlyTransaction();
+        Optional<NodeInterfacesState> interfaces = null;
+        NodeInterfacesState interfacesData = null;
+        try {
+            interfaces = readTransaction.read(LogicalDatastoreType.CONFIGURATION, path).checkedGet();
+            if (interfaces.isPresent()) {
+                LOG.info("NodeInterfacesState from data store is not null");
+                return interfaces.get();
+            }
+        } catch (ReadFailedException e) {
+            LOG.warn("Failed to read {} ", path, e);
+        }
+        LOG.info("NodeInterfacesState from data store is null");
+        return null;
     }
 
     private static DataBroker getDataBroker(String nodeId, MountPointService mountPointService) {
@@ -196,17 +215,17 @@ public class NetconfDataOperator {
         return ipv6Builder.build();
     }
 
-    private void writeData(DataBroker dataBroker, InstanceIdentifier<NodeInterfacesState> path,
+    private void writeData(DataBroker nodeDataBroker, InstanceIdentifier<NodeInterfacesState> path,
                            NodeInterfacesState data) {
-        final WriteTransaction writeTransaction = dataBroker.newWriteOnlyTransaction();
+        final WriteTransaction writeTransaction = nodeDataBroker.newWriteOnlyTransaction();
         LOG.info("Start write data to dataStore");
         writeTransaction.merge(LogicalDatastoreType.CONFIGURATION, path, data, true);
         LOG.info("Submit");
         writeTransaction.submit();
     }
 
-    private NodeInterfacesState readData(DataBroker dataBroker, InstanceIdentifier<NodeInterfacesState> path) {
-        final ReadTransaction readTransaction = dataBroker.newReadOnlyTransaction();
+    private NodeInterfacesState readData(DataBroker nodeDataBroker, InstanceIdentifier<NodeInterfacesState> path) {
+        final ReadTransaction readTransaction = nodeDataBroker.newReadOnlyTransaction();
         Optional<NodeInterfacesState> interfaces = null;
         NodeInterfacesState interfacesData = null;
         try {

@@ -8,7 +8,8 @@
 package org.opendaylight.p4plugin.netconf.adapter.impl;
 
 import java.util.Collection;
-import java.util.List;
+
+import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 import org.opendaylight.controller.md.sal.binding.api.DataObjectModification;
 import org.opendaylight.controller.md.sal.binding.api.DataTreeChangeListener;
 import org.opendaylight.controller.md.sal.binding.api.DataTreeModification;
@@ -30,13 +31,13 @@ public class NetconfStateChangeListener implements DataTreeChangeListener<Node> 
 
     private static final Logger LOG = LoggerFactory.getLogger(NetconfStateChangeListener.class);
 
-    private DeviceInterfaceProcess deviceInterfaceProcess;
+    private DeviceInterfaceDataOperator deviceInterfaceDataOperator;
     private static final InstanceIdentifier<Node> NODE_IID = InstanceIdentifier
             .create(NetworkTopology.class).child(Topology.class, new TopologyKey(new TopologyId(TopologyNetconf
                     .QNAME.getLocalName()))).child(Node.class);
 
-    public NetconfStateChangeListener(DeviceInterfaceProcess deviceInterfaceProcess) {
-        this.deviceInterfaceProcess = deviceInterfaceProcess;
+    public NetconfStateChangeListener(DeviceInterfaceDataOperator deviceInterfaceDataOperator) {
+        this.deviceInterfaceDataOperator = deviceInterfaceDataOperator;
     }
 
     @Override
@@ -75,17 +76,24 @@ public class NetconfStateChangeListener implements DataTreeChangeListener<Node> 
                             .ConnectionStatus.Connected)) {
                         LOG.info("Node {} was connected", nodeAfter.getNodeId().getValue());
                         LOG.info("Start write interfaces");
-                        deviceInterfaceProcess.writeDeviceInterfaces(nodeAfter.getNodeId().getValue());
+                        deviceInterfaceDataOperator.writeInterfacesToDevice(nodeAfter.getNodeId().getValue());
 
                         LOG.info("Start read interfaces");
-                        NodeInterfacesState interfacesData = deviceInterfaceProcess
-                                .readDeviceInterfaces(nodeAfter.getNodeId().getValue());
+                        NodeInterfacesState interfacesData = deviceInterfaceDataOperator
+                                .readInterfacesFromDevice(nodeAfter.getNodeId().getValue());
                         if (null == interfacesData) {
                             LOG.info("InterFacesData is null");
                         }
                         if (null != interfacesData.getNode() && 0 != interfacesData.getNode().size()) {
                             LOG.info("NodeList from device is {}", interfacesData.getNode());
                         }
+
+                        LOG.info("Send p4-device message to module core");
+                        //// TODO: 17-9-14
+
+                        LOG.info("Read interfaces from controller data store");
+                        NodeInterfacesState data = deviceInterfaceDataOperator.readInterfacesFromControllerDataStore();
+                        LOG.info("Data from data store is {}", data);
                     }
                     break;
                 case DELETE:

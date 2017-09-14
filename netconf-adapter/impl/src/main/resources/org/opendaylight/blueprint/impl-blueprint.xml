@@ -18,21 +18,22 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     <reference id="mountService"
                interface="org.opendaylight.controller.md.sal.binding.api.MountPointService" />
 
-    <bean id="netconfDataOperator"
-          class="org.opendaylight.p4plugin.netconf.adapter.impl.NetconfDataOperator">
+    <bean id="dataProcess"
+          class="org.opendaylight.p4plugin.netconf.adapter.impl.DataProcess">
+        <argument ref="dataBroker" />
         <argument ref="mountService" />
     </bean>
 
-    <bean id="deviceInterfaceProcess"
-          class="org.opendaylight.p4plugin.netconf.adapter.impl.DeviceInterfaceProcess">
-        <argument ref="netconfDataOperator" />
+    <bean id="deviceInterfaceDataOperator"
+          class="org.opendaylight.p4plugin.netconf.adapter.impl.DeviceInterfaceDataOperator">
+        <argument ref="dataProcess" />
     </bean>
 
     <bean id="provider" 
         class="org.opendaylight.p4plugin.netconf.adapter.impl.NetconfAdapterProvider"
         init-method="init" destroy-method="close">
         <argument ref="dataBroker" />
-        <argument ref="deviceInterfaceProcess" />
+        <argument ref="deviceInterfaceDataOperator" />
     </bean>
     
 </blueprint>
