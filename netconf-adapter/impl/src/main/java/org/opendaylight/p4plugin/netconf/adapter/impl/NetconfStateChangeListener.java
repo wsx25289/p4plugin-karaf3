@@ -14,6 +14,9 @@ import org.opendaylight.controller.md.sal.binding.api.DataObjectModification;
 import org.opendaylight.controller.md.sal.binding.api.DataTreeChangeListener;
 import org.opendaylight.controller.md.sal.binding.api.DataTreeModification;
 import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.NodeInterfacesState;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.node.NodeConnector;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.node.NodeConnectorBuilder;
+import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.nodes.NodeBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.netconf.node.topology.rev150114.NetconfNode;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.netconf.node.topology.rev150114.NetconfNodeConnectionStatus;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.netconf.node.topology.rev150114.network.topology.topology.topology.types.TopologyNetconf;
@@ -32,7 +35,7 @@ public class NetconfStateChangeListener implements DataTreeChangeListener<Node> 
     private static final Logger LOG = LoggerFactory.getLogger(NetconfStateChangeListener.class);
 
     private DeviceInterfaceDataOperator deviceInterfaceDataOperator;
-    private static final InstanceIdentifier<Node> NODE_IID = InstanceIdentifier
+    private static final InstanceIdentifier<Node> NETCONF_NODE_IID = InstanceIdentifier
             .create(NetworkTopology.class).child(Topology.class, new TopologyKey(new TopologyId(TopologyNetconf
                     .QNAME.getLocalName()))).child(Node.class);
 
@@ -91,9 +94,22 @@ public class NetconfStateChangeListener implements DataTreeChangeListener<Node> 
                         LOG.info("Send p4-device message to module core");
                         //// TODO: 17-9-14
 
-                        LOG.info("Read interfaces from controller data store");
-                        NodeInterfacesState data = deviceInterfaceDataOperator.readInterfacesFromControllerDataStore();
-                        LOG.info("Data from data store is {}", data);
+                        LOG.info("Start write device interfaces info to controller data store");
+                        deviceInterfaceDataOperator.writeInterfacesToControllerDataStore(interfacesData.getNode());
+
+                        LOG.info("Start read interfaces from controller data store");
+                        NodeInterfacesState data1 = deviceInterfaceDataOperator.readInterfacesFromControllerDataStore();
+                        LOG.info("Data from controller data store is {}", data1);
+
+                        LOG.info("Start read interfaces from controller data store again");
+                        NodeInterfacesState data2 = deviceInterfaceDataOperator.readInterfacesFromControllerDataStore();
+                        LOG.info("Data from controller data store is {}", data2);
+
+                        LOG.info("Start write interfaces to opendaylight inventory");
+//                        NodeBuilder builder = new NodeBuilder();
+//                        builder.setNodeConnector();
+//                        NodeConnectorBuilder connectorBuilder = new NodeConnectorBuilder();
+
                     }
                     break;
                 case DELETE:
@@ -108,7 +124,7 @@ public class NetconfStateChangeListener implements DataTreeChangeListener<Node> 
     }
 
     public InstanceIdentifier<Node> getNodeId() {
-        return NODE_IID;
+        return NETCONF_NODE_IID;
     }
 
 }

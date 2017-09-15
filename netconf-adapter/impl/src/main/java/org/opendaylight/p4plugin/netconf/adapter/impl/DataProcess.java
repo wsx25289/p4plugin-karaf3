@@ -18,6 +18,8 @@ import org.opendaylight.controller.md.sal.binding.api.ReadTransaction;
 import org.opendaylight.controller.md.sal.binding.api.WriteTransaction;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
 import org.opendaylight.controller.md.sal.common.api.data.ReadFailedException;
+import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.InterfaceType;
+import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.InterfacesState;
 import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.NodeInterfacesState;
 import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.NodeInterfacesStateBuilder;
 import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.interfaces.state.Interface;
@@ -88,20 +90,31 @@ public class DataProcess {
         return readData(nodeDataBroker, path);
     }
 
+    public void writeToDataStore(org.opendaylight.yang.gen.v1.urn.ietf
+                                         .interfaces.test.rev170908.node.interfaces.state.Node node,
+                                 InstanceIdentifier<org.opendaylight.yang.gen.v1.urn.ietf.interfaces
+                                         .test.rev170908.node.interfaces.state.Node> path) {
+        final WriteTransaction writeTransaction = dataBroker.newWriteOnlyTransaction();
+        LOG.info("Write to controller data store");
+        writeTransaction.put(LogicalDatastoreType.OPERATIONAL, path, node, true);
+        LOG.info("Submit");
+        writeTransaction.submit();
+    }
+
     public NodeInterfacesState readFromDataStore(InstanceIdentifier<NodeInterfacesState> path) {
         final ReadTransaction readTransaction = dataBroker.newReadOnlyTransaction();
         Optional<NodeInterfacesState> interfaces = null;
         NodeInterfacesState interfacesData = null;
         try {
-            interfaces = readTransaction.read(LogicalDatastoreType.CONFIGURATION, path).checkedGet();
+            interfaces = readTransaction.read(LogicalDatastoreType.OPERATIONAL, path).checkedGet();
             if (interfaces.isPresent()) {
-                LOG.info("NodeInterfacesState from data store is not null");
+                LOG.info("NodeInterfacesState from controller data store is not null");
                 return interfaces.get();
             }
         } catch (ReadFailedException e) {
             LOG.warn("Failed to read {} ", path, e);
         }
-        LOG.info("NodeInterfacesState from data store is null");
+        LOG.info("NodeInterfacesState from controller data store is null");
         return null;
     }
 
@@ -147,6 +160,9 @@ public class DataProcess {
         InterfaceBuilder interfaceBuilderOne = new InterfaceBuilder();
         interfaceBuilderOne.setKey(new InterfaceKey("InterfaceOne"));
         interfaceBuilderOne.setName("InterfaceOne");
+        interfaceBuilderOne.setType(InterfaceType.class);
+        interfaceBuilderOne.setIfIndex(new Integer(3003));
+        interfaceBuilderOne.setAdminStatus(Interface.AdminStatus.Up);
         interfaceBuilderOne.setOperStatus(Interface.OperStatus.Up);
         interfaceBuilderOne.setSpeed(new Gauge64(new BigInteger("819200")));
         interfaceBuilderOne.setIpv4(constructIpv4("10.38.38.38", "10.39.39.39"));
@@ -156,6 +172,9 @@ public class DataProcess {
         InterfaceBuilder interfaceBuilderTwo = new InterfaceBuilder();
         interfaceBuilderTwo.setKey(new InterfaceKey("InterfaceTwo"));
         interfaceBuilderTwo.setName("InterfaceTwo");
+        interfaceBuilderTwo.setType(InterfaceType.class);
+        interfaceBuilderTwo.setIfIndex(new Integer(4004));
+        interfaceBuilderTwo.setAdminStatus(Interface.AdminStatus.Up);
         interfaceBuilderTwo.setOperStatus(Interface.OperStatus.Up);
         interfaceBuilderTwo.setSpeed(new Gauge64(new BigInteger("819200")));
         interfaceBuilderTwo.setIpv4(constructIpv4("10.40.40.40", "10.41.41.41"));
@@ -201,12 +220,14 @@ public class DataProcess {
         addressBuilder1.setKey(new org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.interfaces
                 .state._interface.ipv6.AddressKey(new Ipv6AddressNoZone(ipv6One)));
         addressBuilder1.setIp(new Ipv6AddressNoZone(ipv6One));
+        addressBuilder1.setPrefixLength(new Short("10"));
         org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.interfaces.state._interface.ipv6.AddressBuilder
                 addressBuilder2 = new org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.interfaces
                 .state._interface.ipv6.AddressBuilder();
         addressBuilder2.setKey(new org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.interfaces.
                 state._interface.ipv6.AddressKey(new Ipv6AddressNoZone(ipv6Two)));
         addressBuilder2.setIp(new Ipv6AddressNoZone(ipv6Two));
+        addressBuilder2.setPrefixLength(new Short("20"));
         List<org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.interfaces.state._interface.ipv6.Address>
                 addressList = new ArrayList<>();
         addressList.add(addressBuilder1.build());
@@ -218,7 +239,7 @@ public class DataProcess {
     private void writeData(DataBroker nodeDataBroker, InstanceIdentifier<NodeInterfacesState> path,
                            NodeInterfacesState data) {
         final WriteTransaction writeTransaction = nodeDataBroker.newWriteOnlyTransaction();
-        LOG.info("Start write data to dataStore");
+        LOG.info("Write");
         writeTransaction.merge(LogicalDatastoreType.CONFIGURATION, path, data, true);
         LOG.info("Submit");
         writeTransaction.submit();

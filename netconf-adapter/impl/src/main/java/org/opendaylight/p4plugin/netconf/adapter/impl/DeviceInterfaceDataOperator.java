@@ -7,7 +7,11 @@
  */
 package org.opendaylight.p4plugin.netconf.adapter.impl;
 
+import java.util.List;
+import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.InterfacesState;
 import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.NodeInterfacesState;
+import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.node.interfaces.state.Node;
+import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.node.interfaces.state.NodeKey;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +22,11 @@ public class DeviceInterfaceDataOperator {
 
     private DataProcess dataProcess;
 
-    public static final InstanceIdentifier<NodeInterfacesState> NODE_INTERFACE_IID = InstanceIdentifier
+    private static final InstanceIdentifier<NodeInterfacesState> NODE_INTERFACE_IID = InstanceIdentifier
             .create(NodeInterfacesState.class);
+
+//    private static final InstanceIdentifier<Node> NODE_IID = InstanceIdentifier
+//            .create(Node.class);
 
     public DeviceInterfaceDataOperator(DataProcess dataProcess) {
         this.dataProcess = dataProcess;
@@ -35,8 +42,20 @@ public class DeviceInterfaceDataOperator {
         return dataProcess.readFromDevice(nodeId, NODE_INTERFACE_IID);
     }
 
+    public void writeInterfacesToControllerDataStore(List<Node> nodeList) {
+        LOG.info("Start write data to controller data store");
+        for (Node node : nodeList) {
+            InstanceIdentifier path = getNodePath(node.getNodeId());
+            dataProcess.writeToDataStore(node, path);
+        }
+    }
+
     public NodeInterfacesState readInterfacesFromControllerDataStore() {
-        LOG.info("Start read data from controller data store");
+        LOG.info("Read data from controller data store");
         return dataProcess.readFromDataStore(NODE_INTERFACE_IID);
+    }
+
+    private InstanceIdentifier<Node> getNodePath(String nodeId) {
+        return InstanceIdentifier.create(NodeInterfacesState.class).child(Node.class, new NodeKey(nodeId));
     }
 }
