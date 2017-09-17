@@ -46,12 +46,18 @@ public class NetconfAdapterServiceImpl implements P4pluginNetconfAdapterApiServi
         }
 
         LOG.info("Ietf data is {}", data);
-        String result = writeDataToInventory(data.getNode());
+        String result = null;
+        for (Node node : data.getNode()) {
+            result = writeNodeToInventory(node);
+        }
+
         outputBuilder.setMessage(result);
         return Futures.immediateFuture(RpcResultBuilder.success(outputBuilder.build()).build());
     }
 
-    private String writeDataToInventory(List<Node> nodeList) {
+    private String writeNodeToInventory(Node node) {
+        //getNodePath(node);
+        //org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.nodes.Node
         return null;
     }
 
