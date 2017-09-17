@@ -181,9 +181,22 @@ public class DataProcess {
         interfaceBuilderTwo.setIpv6(constructIpv6("3ffe:0000:0000:0000:1010:4a4a:0000:0003",
                 "3ffe:0000:0000:0000:1010:5a5a:0000:0004"));
 
+        InterfaceBuilder interfaceBuilderThree = new InterfaceBuilder();
+        interfaceBuilderThree.setKey(new InterfaceKey("InterfaceThree"));
+        interfaceBuilderThree.setName("InterfaceThree");
+        interfaceBuilderThree.setType(InterfaceType.class);
+        interfaceBuilderThree.setIfIndex(new Integer(5005));
+        interfaceBuilderThree.setAdminStatus(Interface.AdminStatus.Up);
+        interfaceBuilderThree.setOperStatus(Interface.OperStatus.Up);
+        interfaceBuilderThree.setSpeed(new Gauge64(new BigInteger("819200")));
+        interfaceBuilderThree.setIpv4(constructIpv4("10.42.42.42", "10.43.43.43"));
+        interfaceBuilderThree.setIpv6(constructIpv6("3ffe:0000:0000:0000:1010:6a6a:0000:0005",
+                "3ffe:0000:0000:0000:1010:7a7a:0000:0006"));
+
         List<Interface> list = new ArrayList<>();
         list.add(interfaceBuilderOne.build());
         list.add(interfaceBuilderTwo.build());
+        list.add(interfaceBuilderThree.build());
         nodeBuilder.setInterface(list);
 
         List<org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.node.interfaces.state.Node>

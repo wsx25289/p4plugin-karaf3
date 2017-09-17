@@ -29,6 +29,13 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
         <argument ref="dataProcess" />
     </bean>
 
+    <bean id="netconfAdapterServiceImpl"
+          class="org.opendaylight.p4plugin.netconf.adapter.impl.NetconfAdapterServiceImpl">
+        <argument ref="dataBroker" />
+        <argument ref="deviceInterfaceDataOperator" />
+    </bean>
+    <odl:rpc-implementation ref="netconfAdapterServiceImpl" />
+
     <bean id="provider" 
         class="org.opendaylight.p4plugin.netconf.adapter.impl.NetconfAdapterProvider"
         init-method="init" destroy-method="close">

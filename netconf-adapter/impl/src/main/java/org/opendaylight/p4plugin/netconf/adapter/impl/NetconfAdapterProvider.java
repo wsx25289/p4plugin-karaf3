@@ -15,7 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class NetconfAdapterProvider {
+
     private static final Logger LOG = LoggerFactory.getLogger(NetconfAdapterProvider.class);
+
     private final DataBroker dataBroker;
     private DeviceInterfaceDataOperator deviceInterfaceDataOperator;
     private NetconfStateChangeListener netconfStateChangeListener;
