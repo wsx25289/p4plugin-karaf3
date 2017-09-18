@@ -105,7 +105,7 @@ public class NetconfStateChangeListener implements DataTreeChangeListener<Node> 
                         NodeInterfacesState data2 = deviceInterfaceDataOperator.readInterfacesFromControllerDataStore();
                         LOG.info("Data from controller data store is {}", data2);
 
-                        LOG.info("Start write interfaces to opendaylight inventory");
+//                        LOG.info("Start write interfaces to opendaylight inventory");
 //                        NodeBuilder builder = new NodeBuilder();
 //                        builder.setNodeConnector();
 //                        NodeConnectorBuilder connectorBuilder = new NodeConnectorBuilder();

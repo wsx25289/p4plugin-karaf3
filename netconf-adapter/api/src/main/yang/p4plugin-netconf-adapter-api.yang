@@ -11,7 +11,19 @@ module p4plugin-netconf-adapter-api {
     rpc write-inventory {
         input {
 
-            }
+        }
+
+        output {
+          leaf message {
+            type string;
+          }
+        }
+    }
+
+    rpc read-inventory {
+        input {
+
+        }
 
         output {
           leaf message {

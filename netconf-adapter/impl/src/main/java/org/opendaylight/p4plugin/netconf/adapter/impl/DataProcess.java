@@ -104,7 +104,6 @@ public class DataProcess {
     public NodeInterfacesState readFromDataStore(InstanceIdentifier<NodeInterfacesState> path) {
         final ReadTransaction readTransaction = dataBroker.newReadOnlyTransaction();
         Optional<NodeInterfacesState> interfaces = null;
-        NodeInterfacesState interfacesData = null;
         try {
             interfaces = readTransaction.read(LogicalDatastoreType.OPERATIONAL, path).checkedGet();
             if (interfaces.isPresent()) {
@@ -157,46 +156,19 @@ public class DataProcess {
         nodeBuilder.setGrpcServerPort(new PortNumber(new Integer(50051)));
         nodeBuilder.setDeviceId(new BigInteger("0"));
 
-        InterfaceBuilder interfaceBuilderOne = new InterfaceBuilder();
-        interfaceBuilderOne.setKey(new InterfaceKey("InterfaceOne"));
-        interfaceBuilderOne.setName("InterfaceOne");
-        interfaceBuilderOne.setType(InterfaceType.class);
-        interfaceBuilderOne.setIfIndex(new Integer(3003));
-        interfaceBuilderOne.setAdminStatus(Interface.AdminStatus.Up);
-        interfaceBuilderOne.setOperStatus(Interface.OperStatus.Up);
-        interfaceBuilderOne.setSpeed(new Gauge64(new BigInteger("819200")));
-        interfaceBuilderOne.setIpv4(constructIpv4("10.38.38.38", "10.39.39.39"));
-        interfaceBuilderOne.setIpv6(constructIpv6("3ffe:0000:0000:0000:1010:2a2a:0000:0001",
-                "3ffe:0000:0000:0000:1010:3a3a:0000:0002"));
+        Interface interface1 = constructInterface("Interface1", 3003, "819200", "10.38.38.38", "10.39.39.39",
+                "3ffe:0000:0000:0000:1010:2a2a:0000:0001", "3ffe:0000:0000:0000:1010:3a3a:0000:0002");
 
-        InterfaceBuilder interfaceBuilderTwo = new InterfaceBuilder();
-        interfaceBuilderTwo.setKey(new InterfaceKey("InterfaceTwo"));
-        interfaceBuilderTwo.setName("InterfaceTwo");
-        interfaceBuilderTwo.setType(InterfaceType.class);
-        interfaceBuilderTwo.setIfIndex(new Integer(4004));
-        interfaceBuilderTwo.setAdminStatus(Interface.AdminStatus.Up);
-        interfaceBuilderTwo.setOperStatus(Interface.OperStatus.Up);
-        interfaceBuilderTwo.setSpeed(new Gauge64(new BigInteger("819200")));
-        interfaceBuilderTwo.setIpv4(constructIpv4("10.40.40.40", "10.41.41.41"));
-        interfaceBuilderTwo.setIpv6(constructIpv6("3ffe:0000:0000:0000:1010:4a4a:0000:0003",
-                "3ffe:0000:0000:0000:1010:5a5a:0000:0004"));
+        Interface interface2 = constructInterface("Interface2", 4004, "819200", "10.40.40.40", "10.41.41.41",
+                "3ffe:0000:0000:0000:1010:4a4a:0000:0003", "3ffe:0000:0000:0000:1010:5a5a:0000:0004");
 
-        InterfaceBuilder interfaceBuilderThree = new InterfaceBuilder();
-        interfaceBuilderThree.setKey(new InterfaceKey("InterfaceThree"));
-        interfaceBuilderThree.setName("InterfaceThree");
-        interfaceBuilderThree.setType(InterfaceType.class);
-        interfaceBuilderThree.setIfIndex(new Integer(5005));
-        interfaceBuilderThree.setAdminStatus(Interface.AdminStatus.Up);
-        interfaceBuilderThree.setOperStatus(Interface.OperStatus.Up);
-        interfaceBuilderThree.setSpeed(new Gauge64(new BigInteger("819200")));
-        interfaceBuilderThree.setIpv4(constructIpv4("10.42.42.42", "10.43.43.43"));
-        interfaceBuilderThree.setIpv6(constructIpv6("3ffe:0000:0000:0000:1010:6a6a:0000:0005",
-                "3ffe:0000:0000:0000:1010:7a7a:0000:0006"));
+        Interface interface3 = constructInterface("Interface3", 5005, "819200", "10.42.42.42", "10.43.43.43",
+                "3ffe:0000:0000:0000:1010:6a6a:0000:0005", "3ffe:0000:0000:0000:1010:7a7a:0000:0006");
 
         List<Interface> list = new ArrayList<>();
-        list.add(interfaceBuilderOne.build());
-        list.add(interfaceBuilderTwo.build());
-        list.add(interfaceBuilderThree.build());
+        list.add(interface1);
+        list.add(interface2);
+        list.add(interface3);
         nodeBuilder.setInterface(list);
 
         List<org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.node.interfaces.state.Node>
@@ -206,6 +178,21 @@ public class DataProcess {
         NodeInterfacesStateBuilder stateBuilder = new NodeInterfacesStateBuilder();
         stateBuilder.setNode(nodeList);
         return stateBuilder.build();
+    }
+
+    private Interface constructInterface(String name, int ifIndex, String speed, String ipv4One, String ipv4Two,
+                                         String ipv6One, String ipv6Two) {
+        InterfaceBuilder builder = new InterfaceBuilder();
+        builder.setKey(new InterfaceKey(name));
+        builder.setName(name);
+        builder.setType(InterfaceType.class);
+        builder.setIfIndex(new Integer(ifIndex));
+        builder.setAdminStatus(Interface.AdminStatus.Up);
+        builder.setOperStatus(Interface.OperStatus.Up);
+        builder.setSpeed(new Gauge64(new BigInteger(speed)));
+        builder.setIpv4(constructIpv4(ipv4One, ipv4Two));
+        builder.setIpv6(constructIpv6(ipv6One, ipv6Two));
+        return builder.build();
     }
 
     private Ipv4 constructIpv4(String ipv4One, String ipv4Two) {
