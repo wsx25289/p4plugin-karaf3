@@ -103,7 +103,7 @@ public class NetconfAdapterServiceImpl implements P4pluginNetconfAdapterApiServi
     private boolean writeNodeToInventory(Node node) {
         LOG.info("Get node path");
         InstanceIdentifier<org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.nodes.Node> path =
-                getNodePath(node.getNodeId());
+                getNodePath(node.getNodeId().substring(node.getNodeId().length()-1, node.getNodeId().length()));
         if (null == path) {
             LOG.info("Path not exit");
             return false;
