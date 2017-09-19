@@ -8,7 +8,6 @@
 package org.opendaylight.p4plugin.netconf.adapter.impl;
 
 import java.util.List;
-import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.InterfacesState;
 import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.NodeInterfacesState;
 import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.node.interfaces.state.Node;
 import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.node.interfaces.state.NodeKey;
@@ -25,8 +24,6 @@ public class DeviceInterfaceDataOperator {
     private static final InstanceIdentifier<NodeInterfacesState> NODE_INTERFACE_IID = InstanceIdentifier
             .create(NodeInterfacesState.class);
 
-//    private static final InstanceIdentifier<Node> NODE_IID = InstanceIdentifier
-//            .create(Node.class);
 
     public DeviceInterfaceDataOperator(DataProcess dataProcess) {
         this.dataProcess = dataProcess;

@@ -10,7 +10,9 @@ package org.opendaylight.p4plugin.netconf.adapter.impl;
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.Futures;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 import org.opendaylight.controller.md.sal.binding.api.ReadTransaction;
 import org.opendaylight.controller.md.sal.binding.api.WriteTransaction;
@@ -40,10 +42,7 @@ import org.opendaylight.yangtools.yang.common.RpcResultBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-import java.util.concurrent.Future;
-
-public class NetconfAdapterServiceImpl implements P4pluginNetconfAdapterApiService{
+public class NetconfAdapterServiceImpl implements P4pluginNetconfAdapterApiService {
 
     private static final Logger LOG = LoggerFactory.getLogger(NetconfAdapterServiceImpl.class);
 
@@ -84,7 +83,7 @@ public class NetconfAdapterServiceImpl implements P4pluginNetconfAdapterApiServi
         LOG.info("Start read inventory data");
         InstanceIdentifier<Nodes> path = InstanceIdentifier.create(Nodes.class);
         final ReadTransaction readTransaction = dataBroker.newReadOnlyTransaction();
-        Optional<Nodes> nodes =null;
+        Optional<Nodes> nodes = null;
         ReadInventoryOutputBuilder builder = new ReadInventoryOutputBuilder();
         try {
             nodes = readTransaction.read(LogicalDatastoreType.OPERATIONAL, path).checkedGet();
@@ -103,7 +102,7 @@ public class NetconfAdapterServiceImpl implements P4pluginNetconfAdapterApiServi
     private boolean writeNodeToInventory(Node node) {
         LOG.info("Get node path");
         InstanceIdentifier<org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.nodes.Node> path =
-                getNodePath(node.getNodeId().substring(node.getNodeId().length()-1, node.getNodeId().length()));
+                getNodePath(node.getNodeId().substring(node.getNodeId().length() - 1, node.getNodeId().length()));
         if (null == path) {
             LOG.info("Path not exit");
             return false;
@@ -128,17 +127,17 @@ public class NetconfAdapterServiceImpl implements P4pluginNetconfAdapterApiServi
 
     private org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.nodes.Node convertData(Node node) {
         NodeBuilder nodeBuilder = new NodeBuilder();
-        nodeBuilder.setKey(new NodeKey(new NodeId(node.getNodeId().substring(node.getNodeId().length()-1,
+        nodeBuilder.setKey(new NodeKey(new NodeId(node.getNodeId().substring(node.getNodeId().length() - 1,
                 node.getNodeId().length()))));
-        nodeBuilder.setId(new NodeId(node.getNodeId().substring(node.getNodeId().length()-1,
+        nodeBuilder.setId(new NodeId(node.getNodeId().substring(node.getNodeId().length() - 1,
                 node.getNodeId().length())));
 
         List<NodeConnector> list = new ArrayList<>();
         for (Interface infce : node.getInterface()) {
             NodeConnectorBuilder connectorBuilder = new NodeConnectorBuilder();
             connectorBuilder.setKey(new NodeConnectorKey(new NodeConnectorId(infce.getName().substring(
-                    infce.getName().length()-1, infce.getName().length()))));
-            connectorBuilder.setId(new NodeConnectorId(infce.getName().substring(infce.getName().length()-1,
+                    infce.getName().length() - 1, infce.getName().length()))));
+            connectorBuilder.setId(new NodeConnectorId(infce.getName().substring(infce.getName().length() - 1,
                     infce.getName().length())));
             list.add(connectorBuilder.build());
         }

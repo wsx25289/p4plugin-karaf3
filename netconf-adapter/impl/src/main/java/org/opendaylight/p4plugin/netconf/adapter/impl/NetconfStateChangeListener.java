@@ -9,14 +9,10 @@ package org.opendaylight.p4plugin.netconf.adapter.impl;
 
 import java.util.Collection;
 
-import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 import org.opendaylight.controller.md.sal.binding.api.DataObjectModification;
 import org.opendaylight.controller.md.sal.binding.api.DataTreeChangeListener;
 import org.opendaylight.controller.md.sal.binding.api.DataTreeModification;
 import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.NodeInterfacesState;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.node.NodeConnector;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.node.NodeConnectorBuilder;
-import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.nodes.NodeBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.netconf.node.topology.rev150114.NetconfNode;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.netconf.node.topology.rev150114.NetconfNodeConnectionStatus;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.netconf.node.topology.rev150114.network.topology.topology.topology.types.TopologyNetconf;
@@ -104,11 +100,6 @@ public class NetconfStateChangeListener implements DataTreeChangeListener<Node> 
                         LOG.info("Start read interfaces from controller data store again");
                         NodeInterfacesState data2 = deviceInterfaceDataOperator.readInterfacesFromControllerDataStore();
                         LOG.info("Data from controller data store is {}", data2);
-
-//                        LOG.info("Start write interfaces to opendaylight inventory");
-//                        NodeBuilder builder = new NodeBuilder();
-//                        builder.setNodeConnector();
-//                        NodeConnectorBuilder connectorBuilder = new NodeConnectorBuilder();
 
                     }
                     break;

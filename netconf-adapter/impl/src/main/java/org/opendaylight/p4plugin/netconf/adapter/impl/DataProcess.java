@@ -19,7 +19,6 @@ import org.opendaylight.controller.md.sal.binding.api.WriteTransaction;
 import org.opendaylight.controller.md.sal.common.api.data.LogicalDatastoreType;
 import org.opendaylight.controller.md.sal.common.api.data.ReadFailedException;
 import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.InterfaceType;
-import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.InterfacesState;
 import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.NodeInterfacesState;
 import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.NodeInterfacesStateBuilder;
 import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.interfaces.state.Interface;
@@ -148,22 +147,57 @@ public class DataProcess {
     }
 
     private NodeInterfacesState constructInterfacesState(String nodeId) {
+        if (nodeId.equals("node1")) {
+            return construct("node1", "127.0.0.1", 50051, "0");
+        }
+        if (nodeId.equals("node2")) {
+            return construct("node2", "127.0.0.1", 50052, "0");
+        }
+        return construct(nodeId, "127.0.0.1", 50053, "0");
+
+    }
+
+    private NodeInterfacesState construct(String nodeId, String grpcIp, int grpcPort, String deviceId) {
         NodeBuilder nodeBuilder = new NodeBuilder();
         nodeBuilder.setKey(new org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.node.interfaces
                 .state.NodeKey(nodeId));
         nodeBuilder.setNodeId(nodeId);
-        nodeBuilder.setGrpcServerIp(new Ipv4Address("127.0.0.1"));
-        nodeBuilder.setGrpcServerPort(new PortNumber(new Integer(50051)));
-        nodeBuilder.setDeviceId(new BigInteger("0"));
+        nodeBuilder.setGrpcServerIp(new Ipv4Address(grpcIp));
+        nodeBuilder.setGrpcServerPort(new PortNumber(new Integer(grpcPort)));
+        nodeBuilder.setDeviceId(new BigInteger(deviceId));
 
-        Interface interface1 = constructInterface("Interface1", 3003, "819200", "10.38.38.38", "10.39.39.39",
-                "3ffe:0000:0000:0000:1010:2a2a:0000:0001", "3ffe:0000:0000:0000:1010:3a3a:0000:0002");
+        Interface interface1 = null;
+        Interface interface2 = null;
+        Interface interface3 = null;
 
-        Interface interface2 = constructInterface("Interface2", 4004, "819200", "10.40.40.40", "10.41.41.41",
-                "3ffe:0000:0000:0000:1010:4a4a:0000:0003", "3ffe:0000:0000:0000:1010:5a5a:0000:0004");
+        if (nodeId.equals("node1")) {
+            interface1 = constructInterface("Interface1", 1001, "819200", "10.38.38.38", "10.39.39.39",
+                    "3ffe:0000:0000:0000:1010:1a1a:0000:0001", "3ffe:0000:0000:0000:1010:2a2a:0000:0002");
 
-        Interface interface3 = constructInterface("Interface3", 5005, "819200", "10.42.42.42", "10.43.43.43",
-                "3ffe:0000:0000:0000:1010:6a6a:0000:0005", "3ffe:0000:0000:0000:1010:7a7a:0000:0006");
+            interface2 = constructInterface("Interface2", 2002, "819200", "10.40.40.40", "10.41.41.41",
+                    "3ffe:0000:0000:0000:1010:3a3a:0000:0003", "3ffe:0000:0000:0000:1010:4a4a:0000:0004");
+
+            interface3 = constructInterface("Interface3", 3003, "819200", "10.42.42.42", "10.43.43.43",
+                    "3ffe:0000:0000:0000:1010:5a5a:0000:0005", "3ffe:0000:0000:0000:1010:6a6a:0000:0006");
+        } else if (nodeId.equals("node2")) {
+            interface1 = constructInterface("Interface1", 4004, "819200", "10.44.44.44", "10.45.45.45",
+                    "3ffe:0000:0000:0000:1010:7a7a:0000:0001", "3ffe:0000:0000:0000:1010:8a8a:0000:0002");
+
+            interface2 = constructInterface("Interface2", 5005, "819200", "10.46.46.46", "10.47.47.47",
+                    "3ffe:0000:0000:0000:1010:9a9a:0000:0003", "3ffe:0000:0000:0000:1010:1b1b:0000:0004");
+
+            interface3 = constructInterface("Interface3", 6006, "819200", "10.48.48.48", "10.49.49.49",
+                    "3ffe:0000:0000:0000:1010:2b2b:0000:0005", "3ffe:0000:0000:0000:1010:3b3b:0000:0006");
+        } else {
+            interface1 = constructInterface("Interface1", 7007, "819200", "10.50.50.50", "10.51.51.51",
+                    "3ffe:0000:0000:0000:1010:4b4b:0000:0001", "3ffe:0000:0000:0000:1010:5b5b:0000:0002");
+
+            interface2 = constructInterface("Interface2", 8008, "819200", "10.52.52.52", "10.53.53.53",
+                    "3ffe:0000:0000:0000:1010:6b6b:0000:0003", "3ffe:0000:0000:0000:1010:7b7b:0000:0004");
+
+            interface3 = constructInterface("Interface3", 9009, "819200", "10.54.54.54", "10.55.55.55",
+                    "3ffe:0000:0000:0000:1010:8b8b:0000:0005", "3ffe:0000:0000:0000:1010:9b9b:0000:0006");
+        }
 
         List<Interface> list = new ArrayList<>();
         list.add(interface1);
@@ -224,8 +258,8 @@ public class DataProcess {
         org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.interfaces.state._interface.ipv6.AddressBuilder
                 addressBuilder2 = new org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.interfaces
                 .state._interface.ipv6.AddressBuilder();
-        addressBuilder2.setKey(new org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.interfaces.
-                state._interface.ipv6.AddressKey(new Ipv6AddressNoZone(ipv6Two)));
+        addressBuilder2.setKey(new org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.interfaces
+                .state._interface.ipv6.AddressKey(new Ipv6AddressNoZone(ipv6Two)));
         addressBuilder2.setIp(new Ipv6AddressNoZone(ipv6Two));
         addressBuilder2.setPrefixLength(new Short("20"));
         List<org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.interfaces.state._interface.ipv6.Address>

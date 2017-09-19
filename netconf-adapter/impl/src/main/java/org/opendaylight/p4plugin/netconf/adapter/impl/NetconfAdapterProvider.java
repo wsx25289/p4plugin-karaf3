@@ -22,7 +22,8 @@ public class NetconfAdapterProvider {
     private DeviceInterfaceDataOperator deviceInterfaceDataOperator;
     private NetconfStateChangeListener netconfStateChangeListener;
 
-    public NetconfAdapterProvider(final DataBroker dataBroker, DeviceInterfaceDataOperator deviceInterfaceDataOperator) {
+    public NetconfAdapterProvider(final DataBroker dataBroker,
+                                  DeviceInterfaceDataOperator deviceInterfaceDataOperator) {
         this.dataBroker = dataBroker;
         this.deviceInterfaceDataOperator = deviceInterfaceDataOperator;
     }
