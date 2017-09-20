@@ -39,6 +39,8 @@ public class DeviceInterfaceDataOperator {
         return dataProcess.readFromDevice(nodeId, NODE_INTERFACE_IID);
     }
 
+    //public void
+
     public void writeInterfacesToControllerDataStore(List<Node> nodeList) {
         LOG.info("Start write data to controller data store");
         for (Node node : nodeList) {

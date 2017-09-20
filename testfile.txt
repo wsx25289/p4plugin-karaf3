@@ -11,3 +11,5 @@
 
  java -jar netconf-testtool-1.2.0-Carbon-executable.jar --device-count 3 --devices-per-port 3
  --debug true --schemas-dir ../../schemas/
+
+/home/dingrui37/Downloads/p4plugin-newest/p4plugin-karaf3/
