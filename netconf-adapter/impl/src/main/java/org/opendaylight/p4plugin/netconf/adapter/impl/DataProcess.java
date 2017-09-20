@@ -170,7 +170,7 @@ public class DataProcess {
         Interface interface2 = null;
         Interface interface3 = null;
 
-        if (nodeId.equals("node1")) {
+        if (nodeId.equals("node0")) {
             interface1 = constructInterface("Interface1", 1001, "819200", "10.38.38.38", "10.39.39.39",
                     "3ffe:0000:0000:0000:1010:1a1a:0000:0001", "3ffe:0000:0000:0000:1010:2a2a:0000:0002");
 
@@ -179,7 +179,7 @@ public class DataProcess {
 
             interface3 = constructInterface("Interface3", 3003, "819200", "10.42.42.42", "10.43.43.43",
                     "3ffe:0000:0000:0000:1010:5a5a:0000:0005", "3ffe:0000:0000:0000:1010:6a6a:0000:0006");
-        } else if (nodeId.equals("node2")) {
+        } else if (nodeId.equals("node1")) {
             interface1 = constructInterface("Interface1", 4004, "819200", "10.44.44.44", "10.45.45.45",
                     "3ffe:0000:0000:0000:1010:7a7a:0000:0001", "3ffe:0000:0000:0000:1010:8a8a:0000:0002");
 

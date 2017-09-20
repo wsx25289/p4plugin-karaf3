@@ -87,9 +87,8 @@ public class NetconfStateChangeListener implements DataTreeChangeListener<Node> 
                             LOG.info("NodeList from device is {}", interfacesData.getNode());
                         }
 
-                        LOG.info("Send p4-device message to module core");
-                        //// TODO: 17-9-14
-                        //deviceInterfaceDataOperator
+                        LOG.info("Send p4-device Info to module core");
+                        deviceInterfaceDataOperator.sendP4DeviceInfo(interfacesData.getNode());
 
                         LOG.info("Start write device interfaces info to controller data store");
                         deviceInterfaceDataOperator.writeInterfacesToControllerDataStore(interfacesData.getNode());

@@ -8,6 +8,7 @@
 package org.opendaylight.p4plugin.netconf.adapter.impl;
 
 import java.util.List;
+import org.opendaylight.p4plugin.core.impl.Utils;
 import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.NodeInterfacesState;
 import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.node.interfaces.state.Node;
 import org.opendaylight.yang.gen.v1.urn.ietf.interfaces.test.rev170908.node.interfaces.state.NodeKey;
@@ -39,7 +40,12 @@ public class DeviceInterfaceDataOperator {
         return dataProcess.readFromDevice(nodeId, NODE_INTERFACE_IID);
     }
 
-    //public void
+    public void sendP4DeviceInfo(List<Node> nodeList) {
+        for (Node node : nodeList) {
+            Utils.setTofinoSwitchPipelineConfig(node.getNodeId(), node.getGrpcServerIp().getValue(),
+                    node.getGrpcServerPort().getValue(), node.getDeviceId().longValue());
+        }
+    }
 
     public void writeInterfacesToControllerDataStore(List<Node> nodeList) {
         LOG.info("Start write data to controller data store");
