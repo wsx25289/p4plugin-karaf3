@@ -21,12 +21,12 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     	<feature version='${project.version}'>odl-p4plugin-core</feature>
     </feature>
 
-    <feature name='odl-p4plugin-netconf-adapter' version='${project.version}' description='ODL :: p4plugin :: netconf :: adapter'>
-    	<feature version='${mdsal.version}'>odl-mdsal-all</feature>
-    	<feature version='${netconf.version}'>odl-netconf-connector-all</feature>
-    	<bundle>mvn:org.opendaylight.p4plugin/p4plugin-netconf-adapter-api/{{VERSION}}</bundle>
-    	<bundle>mvn:org.opendaylight.p4plugin/p4plugin-netconf-adapter-impl/{{VERSION}}</bundle>
-    </feature>
+	<feature name='odl-p4plugin-netconf-adapter' version='${project.version}' description='ODL :: p4plugin :: netconf :: adapter'>
+		<feature version='${mdsal.version}'>odl-mdsal-all</feature>
+		<feature version='${netconf.version}'>odl-netconf-connector-all</feature>
+		<bundle>mvn:org.opendaylight.p4plugin/p4plugin-netconf-adapter-api/{{VERSION}}</bundle>
+		<bundle>mvn:org.opendaylight.p4plugin/p4plugin-netconf-adapter-impl/{{VERSION}}</bundle>
+	</feature>
 
     <feature name='odl-p4plugin-core' version='${project.version}' description='ODL :: p4plugin :: core'>
     	<feature version='${mdsal.version}'>odl-mdsal-all</feature>
@@ -35,5 +35,6 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     	<bundle>mvn:org.opendaylight.p4plugin/p4plugin-core-api/{{VERSION}}</bundle>
     	<bundle>mvn:org.opendaylight.p4plugin/p4plugin-core-impl/{{VERSION}}</bundle>
     </feature>
+
 
 </features>

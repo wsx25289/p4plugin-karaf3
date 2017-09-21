@@ -41,9 +41,14 @@ public class DeviceInterfaceDataOperator {
     }
 
     public void sendP4DeviceInfo(List<Node> nodeList) {
+        boolean result = false;
         for (Node node : nodeList) {
-            Utils.setTofinoSwitchPipelineConfig(node.getNodeId(), node.getGrpcServerIp().getValue(),
+            result = Utils.setTofinoSwitchPipelineConfig(node.getNodeId(), node.getGrpcServerIp().getValue(),
                     node.getGrpcServerPort().getValue(), node.getDeviceId().longValue());
+            if (false == result) {
+                LOG.info("Set device {} forwarding pipeline config failed", node.getDeviceId());
+            }
+            LOG.info("Set device {} forwarding pipeline config failed", node.getDeviceId());
         }
     }
 
