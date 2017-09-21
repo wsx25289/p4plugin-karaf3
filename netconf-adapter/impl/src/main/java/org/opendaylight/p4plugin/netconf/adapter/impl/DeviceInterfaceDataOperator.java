@@ -48,7 +48,7 @@ public class DeviceInterfaceDataOperator {
             if (false == result) {
                 LOG.info("Set device {} forwarding pipeline config failed", node.getDeviceId());
             }
-            LOG.info("Set device {} forwarding pipeline config failed", node.getDeviceId());
+            LOG.info("Set device {} forwarding pipeline config success", node.getDeviceId());
         }
     }
 
