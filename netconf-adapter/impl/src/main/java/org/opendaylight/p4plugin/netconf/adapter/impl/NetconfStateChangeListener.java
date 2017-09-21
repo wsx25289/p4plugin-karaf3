@@ -88,18 +88,20 @@ public class NetconfStateChangeListener implements DataTreeChangeListener<Node> 
                         }
 
                         LOG.info("Send p4-device Info to module core");
-                        deviceInterfaceDataOperator.sendP4DeviceInfo(interfacesData.getNode());
+                        //deviceInterfaceDataOperator.sendP4DeviceInfo(interfacesData.getNode());
 
                         LOG.info("Start write device interfaces info to controller data store");
                         deviceInterfaceDataOperator.writeInterfacesToControllerDataStore(interfacesData.getNode());
 
-                        LOG.info("Start read interfaces from controller data store");
-                        NodeInterfacesState data1 = deviceInterfaceDataOperator.readInterfacesFromControllerDataStore();
-                        LOG.info("Data from controller data store is {}", data1);
+                        try {
+                            Thread.sleep(3000);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
 
-                        LOG.info("Start read interfaces from controller data store again");
-                        NodeInterfacesState data2 = deviceInterfaceDataOperator.readInterfacesFromControllerDataStore();
-                        LOG.info("Data from controller data store is {}", data2);
+                        LOG.info("Start read interfaces from controller data store");
+                        NodeInterfacesState data = deviceInterfaceDataOperator.readInterfacesFromControllerDataStore();
+                        LOG.info("Data from controller data store is {}", data);
 
                     }
                     break;
