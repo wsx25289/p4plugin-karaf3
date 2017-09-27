@@ -17,7 +17,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     <repository>mvn:org.opendaylight.dluxapps/features-dluxapps/{{VERSION}}/xml/features</repository>
 
     <feature name='odl-p4plugin-all' version='${project.version}' description='ODL :: p4plugin :: all'>
-    	<feature version='${project.version}'>odl-p4plugin-netconf-adapter</feature>
+    	<feature version='${project.version}'>odl-p4plugin-adapter</feature>
     	<feature version='${project.version}'>odl-p4plugin-core</feature>
     </feature>
 
@@ -38,6 +38,10 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     	<bundle>mvn:org.opendaylight.p4plugin/p4plugin-core-api/{{VERSION}}</bundle>
     	<bundle>mvn:org.opendaylight.p4plugin/p4plugin-core-impl/{{VERSION}}</bundle>
     </feature>
+
+	<feature name='odl-p4plugin-adapter' version='${project.version}' description='ODL :: p4plugin :: adapter'>
+		<feature version='${project.version}'>odl-p4plugin-netconf-adapter</feature>
+	</feature>
 
 
 </features>

@@ -42,7 +42,7 @@ and is available at http://www.eclipse.org/legal/epl-v10.html
     </developers>
 
     <modules>
-        <module>netconf-adapter</module>
+        <module>adapter</module>
         <module>core</module>
         <module>features</module>
         <module>karaf</module>
