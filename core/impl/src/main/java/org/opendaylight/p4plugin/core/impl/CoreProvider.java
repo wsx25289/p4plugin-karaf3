@@ -9,6 +9,7 @@ package org.opendaylight.p4plugin.core.impl;
 
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 import org.opendaylight.controller.md.sal.binding.api.NotificationPublishService;
+import org.opendaylight.p4plugin.core.impl.channel.GrpcChannel;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,7 @@ public class CoreProvider {
      */
     public void init() {
         new GrpcChannel("localhost", 50051).shutdown();//grpc bug
-        NotificationProvider.getInstance().setNotificationService(notificationService); 
+        NotificationProvider.getInstance().setNotificationService(notificationService);
         LOG.info("P4plugin core provider initiated");
     }
     
