@@ -619,10 +619,6 @@
     }  // grouping interfaces-state
 
     grouping p4-device {
-       leaf node-id {
-         type string;
-       }
-
        leaf grpc-server-ip {
          type inet:ipv4-address;
        }
@@ -640,6 +636,9 @@
        list node {
          key "node-id";
          ordered-by user;
+         leaf node-id {
+           type string;
+         }
 
          uses p4-device;
 
