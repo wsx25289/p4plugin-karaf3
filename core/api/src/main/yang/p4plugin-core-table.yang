@@ -1,7 +1,7 @@
-module p4plugin-core {
+module p4plugin-core-table {
     yang-version 1;
-    namespace "urn:opendaylight:p4plugin:core";
-    prefix "core";
+    namespace "urn:opendaylight:p4plugin:core:table";
+    prefix "table";
 
     organization
         "ZTE corporation";
@@ -17,21 +17,14 @@ module p4plugin-core {
         description "Initial revision.";
     }
 
-    import ietf-inet-types {
-        prefix "inet";
-        revision-date 2013-07-15;
-    }
-    
-    import ietf-interfaces-test {
-        prefix "adapter";
-        revision-date 2017-09-08;
+    import p4plugin-core-device {
+        prefix "device";
+        revision-date 2017-08-08;
     }
 
-    grouping rpc-result {
-        leaf result {
-            type boolean;
-            default false;
-        }
+    import p4plugin-core-common {
+        prefix "common";
+        revision-date 2017-08-08;
     }
 
     grouping action {
@@ -52,13 +45,13 @@ module p4plugin-core {
     }
 
     grouping match-fields {
-        list match-field {
+        list field {
             key "field-name";
             leaf field-name {
                 type string;
             }
 
-            choice field-match-type {
+            choice match-type {
                 default EXACT;
                 case EXACT {
                     leaf exact-value {
@@ -112,11 +105,15 @@ module p4plugin-core {
         }
     }
 
-    grouping table-entry {
+    grouping entry-key {
         leaf table {
             type string;
         }
         uses match-fields;
+    }
+
+    grouping table-entry {
+        uses entry-key;
         choice action-type {
             default DIRECT-ACTION;
             case DIRECT-ACTION {
@@ -137,25 +134,7 @@ module p4plugin-core {
         }
     }
 
-    grouping packet-payload {
-        leaf payload {
-            type binary;
-        }
-    }
-
-    grouping device-config {
-        leaf config-file {
-            type string;
-        }
-    }
-
-    grouping runtime-info {
-        leaf runtime-file {
-            type string;
-        }
-    }
-
-    grouping action-profile-member {
+    grouping member-key {
         leaf action-profile {
             type string;
         }
@@ -163,11 +142,14 @@ module p4plugin-core {
         leaf member-id {
             type uint32;
         }
+    }
 
+    grouping action-profile-member {
+        uses member-key;
         uses action;
     }
 
-    grouping action-profile-group {
+    grouping group-key {
         leaf action-profile {
             type string;
         }
@@ -175,7 +157,10 @@ module p4plugin-core {
         leaf group-id {
             type uint32;
         }
+    }
 
+    grouping action-profile-group {
+        uses group-key;
         leaf group-type {
             type enumeration {
                 enum UNSPECIFIED;
@@ -203,84 +188,50 @@ module p4plugin-core {
             type int32;
         }
     }
-    
-    grouping node {
-        leaf node-id {
-            type string;
-       }
-    }
-    
-    rpc set-pipeline-config {
-        input {
-            uses adapter:p4-device;
-            uses device-config;
-            uses runtime-info;
-        }
-
-        output {
-            uses rpc-result;
-        }
-    }
-
-    rpc get-pipeline-config {
-        input {
-            uses node;
-        }
-
-        output {
-            uses rpc-result;
-            leaf Content {
-                type string;
-            }
-        }
-    }
 
     rpc add-table-entry {
         input {
-            uses node;
+            uses test:node;
             uses table-entry;
         }
 
         output {
-            uses rpc-result;
+            uses common:rpc-result;
         }
     }
 
     rpc modify-table-entry {
         input {
-            uses node;
+            uses test:node;
             uses table-entry;
         }
 
         output {
-            uses rpc-result;
+            uses common:rpc-result;
         }
     }
 
     rpc delete-table-entry {
         input {
-            uses node;
-            leaf table {
-                type string;
-            }
-            uses match-fields;
+            uses test:node;
+            uses entry-key;
         }
 
         output {
-            uses rpc-result;
+            uses common:rpc-result;
         }
     }
 
     rpc read-table-entry {
         input {
-            uses node;
+            uses test:node;
             leaf table {
                 type string;
             }
         }
 
         output {
-            uses rpc-result;
+            uses common:rpc-result;
             leaf-list content {
                 type string; //Need to improve;
             }
@@ -289,58 +240,48 @@ module p4plugin-core {
 
     rpc add-action-profile-member {
         input {
-            uses node;
+            uses test:node;
             uses action-profile-member;
         }
 
         output {
-            uses rpc-result;
+            uses common:rpc-result;
         }
     }
 
     rpc modify-action-profile-member {
         input {
-            uses node;
+            uses test:node;
             uses action-profile-member;
         }
 
         output {
-            uses rpc-result;
+            uses common:rpc-result;
         }
     }
 
     rpc delete-action-profile-member {
         input {
-            uses node;
-            leaf action-profile {
-                type string;
-            }
-
-            leaf member-id {
-                type uint32;
-            }
+            uses test:node;
+            uses member-key;
         }
 
         output {
-            uses rpc-result;
+            uses common:rpc-result;
         }
     }
 
     rpc read-action-profile-member {
         input {
-            uses node;
+            uses test:node;
             leaf action-profile {
                 type string;
-            }
-
-            leaf member-id {
-                type uint32;
             }
         }
 
         output {
-            uses rpc-result;
-            leaf-list member {
+            uses common:rpc-result;
+            leaf-list content {
                 type string;
             }
         }
@@ -348,72 +289,51 @@ module p4plugin-core {
 
     rpc add-action-profile-group {
         input {
-            uses node;
+            uses test:node;
             uses action-profile-group;
         }
 
         output {
-            uses rpc-result;
+            uses common:rpc-result;
         }
     }
 
     //modify action profile group member, max_size cannot be modified after a group has been created
     rpc modify-action-profile-group {
         input {
-            uses node;
+            uses test:node;
             uses action-profile-group;
         }
 
         output {
-            uses rpc-result;
+            uses common:rpc-result;
         }
     }
 
     rpc delete-action-profile-group {
         input {
-            uses node;
-            uses action-profile-group;
+            uses test:node;
+            uses group-key;
         }
 
         output {
-            uses rpc-result;
+            uses common:rpc-result;
         }
     }
 
     rpc read-action-profile-group {
         input {
-            uses node;
+            uses test:node;
             leaf action-profile {
                 type string;
-            }
-
-            leaf group-id {
-                type uint32;
             }
         }
 
         output {
-            uses rpc-result;
-            leaf-list group {
+            uses common:rpc-result;
+            leaf-list content {
                 type string;
             }
         }
-    }
-
-	notification p4-packet-received {
-        uses node;
-        leaf payload {
-    		type binary;
-    	}
-    }		
-	
-	rpc p4-transmit-packet {
-        description "Sending packet out through p4 device.";
-    	input {
-            uses node;
-			leaf payload {
-				type binary;
-		    }
-    	}
     }
 }
