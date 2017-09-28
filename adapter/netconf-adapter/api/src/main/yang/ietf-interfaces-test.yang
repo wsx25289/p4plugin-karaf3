@@ -618,7 +618,7 @@
       }  // list interface          
     }  // grouping interfaces-state
     
-    grouping node {
+    grouping node-identifier {
         leaf node-id {
             type string;
        }
@@ -629,7 +629,7 @@
        //leaf node-id {
        // type string;
        //}
-       uses node;
+       uses node-identifier;
 
        leaf grpc-server-ip {
          type inet:ipv4-address;
