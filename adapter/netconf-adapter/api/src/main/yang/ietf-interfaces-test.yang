@@ -617,11 +617,18 @@
         } // container ipv6
       }  // list interface          
     }  // grouping interfaces-state
+    
+    grouping node {
+        leaf node-id {
+            type string;
+       }
+    }
 
     grouping p4-device {
-       leaf node-id {
-         type string;
-       }
+       //leaf node-id {
+       // type string;
+       //}
+       uses node;
 
        leaf grpc-server-ip {
          type inet:ipv4-address;
