@@ -27,8 +27,13 @@ module p4plugin-core-packet {
         revision-date 2017-08-08;
     }
 
+    import ietf-interfaces-test {
+        prefix "test";
+        revision-date 2017-09-08;
+    }
+
     notification p4-packet-received {
-        uses test:node;
+        uses test:node-identifier;
         leaf payload {
             type binary;
         }
@@ -36,7 +41,7 @@ module p4plugin-core-packet {
 
     rpc p4-transmit-packet {
         input {
-            uses test:node;
+            uses test:node-identifier;
             leaf payload {
                 type binary;
             }

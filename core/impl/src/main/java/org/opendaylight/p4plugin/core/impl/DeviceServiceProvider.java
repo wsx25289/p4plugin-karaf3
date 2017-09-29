@@ -30,8 +30,8 @@ public class DeviceServiceProvider implements P4pluginCoreDeviceService {
         Preconditions.checkArgument(input != null, "Add node input is null.");
         AddNodeOutputBuilder builder = new AddNodeOutputBuilder();
         String node = input.getNodeId();
-        String ip = input.getIp().getValue();
-        Integer port = input.getPort().getValue();
+        String ip = input.getGrpcServerIp().getValue();
+        Integer port = input.getGrpcServerPort().getValue();
         Long deviceId = input.getDeviceId().longValue();
         String runtimeFile = input.getRuntimeFile();
         String configFile = input.getConfigFile();

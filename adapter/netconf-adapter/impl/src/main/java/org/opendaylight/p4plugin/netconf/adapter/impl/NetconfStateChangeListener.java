@@ -7,8 +7,6 @@
  */
 package org.opendaylight.p4plugin.netconf.adapter.impl;
 
-import java.util.Collection;
-
 import org.opendaylight.controller.md.sal.binding.api.DataObjectModification;
 import org.opendaylight.controller.md.sal.binding.api.DataTreeChangeListener;
 import org.opendaylight.controller.md.sal.binding.api.DataTreeModification;
@@ -24,6 +22,8 @@ import org.opendaylight.yang.gen.v1.urn.tbd.params.xml.ns.yang.network.topology.
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Collection;
 
 
 public class NetconfStateChangeListener implements DataTreeChangeListener<Node> {
@@ -88,7 +88,7 @@ public class NetconfStateChangeListener implements DataTreeChangeListener<Node> 
                         }
 
                         LOG.info("Send p4-device Info to module core");
-                        deviceInterfaceDataOperator.sendP4DeviceInfo(interfacesData.getNode());
+                        //deviceInterfaceDataOperator.sendP4DeviceInfo(interfacesData.getNode());
 
                         LOG.info("Start write device interfaces info to controller data store");
                         deviceInterfaceDataOperator.writeInterfacesToControllerDataStore(interfacesData.getNode());

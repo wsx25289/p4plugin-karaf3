@@ -27,6 +27,11 @@ module p4plugin-core-table {
         revision-date 2017-08-08;
     }
 
+    import ietf-interfaces-test {
+        prefix "test";
+        revision-date 2017-09-08;
+    }
+
     grouping action {
         leaf action-name {
             type string;
@@ -191,7 +196,7 @@ module p4plugin-core-table {
 
     rpc add-table-entry {
         input {
-            uses test:node;
+            uses test:node-identifier;
             uses table-entry;
         }
 
@@ -202,7 +207,7 @@ module p4plugin-core-table {
 
     rpc modify-table-entry {
         input {
-            uses test:node;
+            uses test:node-identifier;
             uses table-entry;
         }
 
@@ -213,7 +218,7 @@ module p4plugin-core-table {
 
     rpc delete-table-entry {
         input {
-            uses test:node;
+            uses test:node-identifier;
             uses entry-key;
         }
 
@@ -224,7 +229,7 @@ module p4plugin-core-table {
 
     rpc read-table-entry {
         input {
-            uses test:node;
+            uses test:node-identifier;
             leaf table {
                 type string;
             }
@@ -240,7 +245,7 @@ module p4plugin-core-table {
 
     rpc add-action-profile-member {
         input {
-            uses test:node;
+            uses test:node-identifier;
             uses action-profile-member;
         }
 
@@ -251,7 +256,7 @@ module p4plugin-core-table {
 
     rpc modify-action-profile-member {
         input {
-            uses test:node;
+            uses test:node-identifier;
             uses action-profile-member;
         }
 
@@ -262,7 +267,7 @@ module p4plugin-core-table {
 
     rpc delete-action-profile-member {
         input {
-            uses test:node;
+            uses test:node-identifier;
             uses member-key;
         }
 
@@ -273,7 +278,7 @@ module p4plugin-core-table {
 
     rpc read-action-profile-member {
         input {
-            uses test:node;
+            uses test:node-identifier;
             leaf action-profile {
                 type string;
             }
@@ -289,7 +294,7 @@ module p4plugin-core-table {
 
     rpc add-action-profile-group {
         input {
-            uses test:node;
+            uses test:node-identifier;
             uses action-profile-group;
         }
 
@@ -301,7 +306,7 @@ module p4plugin-core-table {
     //modify action profile group member, max_size cannot be modified after a group has been created
     rpc modify-action-profile-group {
         input {
-            uses test:node;
+            uses test:node-identifier;
             uses action-profile-group;
         }
 
@@ -312,7 +317,7 @@ module p4plugin-core-table {
 
     rpc delete-action-profile-group {
         input {
-            uses test:node;
+            uses test:node-identifier;
             uses group-key;
         }
 
@@ -323,7 +328,7 @@ module p4plugin-core-table {
 
     rpc read-action-profile-group {
         input {
-            uses test:node;
+            uses test:node-identifier;
             leaf action-profile {
                 type string;
             }

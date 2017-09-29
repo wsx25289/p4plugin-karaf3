@@ -29,8 +29,8 @@ module p4plugin-core-device {
     
     //for poc
     import ietf-interfaces-test {
-        prefix test;
-        revision-date 2017-09-08
+        prefix "test";
+        revision-date 2017-09-08;
     }
     
     //grouping node {
@@ -91,7 +91,7 @@ module p4plugin-core-device {
 
     rpc remove-node {
         input {
-            uses test:node;
+            uses test:node-identifier;
         }
 
         output {
@@ -110,7 +110,7 @@ module p4plugin-core-device {
 
     rpc set-pipeline-config {
         input {
-            uses test:node;
+            uses test:node-identifier;
         }
 
         output {
@@ -120,7 +120,7 @@ module p4plugin-core-device {
 
     rpc get-pipeline-config {
         input {
-            uses node;
+            uses test:node-identifier;
         }
 
         output {

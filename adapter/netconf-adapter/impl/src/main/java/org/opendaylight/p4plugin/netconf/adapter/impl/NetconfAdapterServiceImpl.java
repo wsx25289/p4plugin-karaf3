@@ -9,10 +9,6 @@ package org.opendaylight.p4plugin.netconf.adapter.impl;
 
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.Futures;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import org.opendaylight.controller.md.sal.binding.api.DataBroker;
 import org.opendaylight.controller.md.sal.binding.api.ReadTransaction;
 import org.opendaylight.controller.md.sal.binding.api.WriteTransaction;
@@ -29,18 +25,17 @@ import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.node.No
 import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.node.NodeConnectorKey;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.nodes.NodeBuilder;
 import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.nodes.NodeKey;
-import org.opendaylight.yang.gen.v1.urn.p4plugin.netconf.adapter.api.rev170908.P4pluginNetconfAdapterApiService;
-import org.opendaylight.yang.gen.v1.urn.p4plugin.netconf.adapter.api.rev170908.ReadInventoryInput;
-import org.opendaylight.yang.gen.v1.urn.p4plugin.netconf.adapter.api.rev170908.ReadInventoryOutput;
-import org.opendaylight.yang.gen.v1.urn.p4plugin.netconf.adapter.api.rev170908.ReadInventoryOutputBuilder;
-import org.opendaylight.yang.gen.v1.urn.p4plugin.netconf.adapter.api.rev170908.WriteInventoryInput;
-import org.opendaylight.yang.gen.v1.urn.p4plugin.netconf.adapter.api.rev170908.WriteInventoryOutput;
-import org.opendaylight.yang.gen.v1.urn.p4plugin.netconf.adapter.api.rev170908.WriteInventoryOutputBuilder;
+import org.opendaylight.yang.gen.v1.urn.p4plugin.netconf.adapter.api.rev170908.*;
 import org.opendaylight.yangtools.yang.binding.InstanceIdentifier;
 import org.opendaylight.yangtools.yang.common.RpcResult;
 import org.opendaylight.yangtools.yang.common.RpcResultBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class NetconfAdapterServiceImpl implements P4pluginNetconfAdapterApiService {
 
@@ -109,6 +104,7 @@ public class NetconfAdapterServiceImpl implements P4pluginNetconfAdapterApiServi
         }
         LOG.info("Convert node");
         org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.nodes.Node inventoryNode = convertData(node);
+        LOG.info("data is {}", inventoryNode);
         if (null == inventoryNode || null == inventoryNode.getNodeConnector()
                 || 0 == inventoryNode.getNodeConnector().size()) {
             LOG.info("Data converted failed");
