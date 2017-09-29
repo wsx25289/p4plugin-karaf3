@@ -20,18 +20,20 @@ public abstract class Utils {
      * p4c-bm2-ss simple_router.p4 --p4v 14 --p4-runtime-file simple_router.proto.txt --p4runtime-format text
      */
     public static P4Info parseRuntimeInfo(String file) throws IOException {
-        Preconditions.checkArgument(file != null, "Runtime Info file is null.");
-        Reader reader = null;
-        P4Info.Builder info = P4Info.newBuilder();
-        try {
-            reader = new FileReader(file);
-            TextFormat.merge(reader, info);
-            return info.build();
-        } finally {
-            if (reader != null) {
-                reader.close();
+        if (file != null) {
+            Reader reader = null;
+            P4Info.Builder info = P4Info.newBuilder();
+            try {
+                reader = new FileReader(file);
+                TextFormat.merge(reader, info);
+                return info.build();
+            } finally {
+                if (reader != null) {
+                    reader.close();
+                }
             }
         }
+        return null;
     }
 
     /**
@@ -40,9 +42,11 @@ public abstract class Utils {
      * p4c-bm2-ss simple_router.p4 --p4v 14 --toJSON simple_router.json
      */
     public static ByteString parseDeviceConfigInfo(String file) throws IOException {
-        Preconditions.checkArgument(file !=  null, "Device config file is null.");
-        InputStream input = new FileInputStream(new File(file));
-        return ByteString.readFrom(input);
+        if (file != null) {
+            InputStream input = new FileInputStream(new File(file));
+            return ByteString.readFrom(input);
+        }
+        return null;
     }
 
     /**
