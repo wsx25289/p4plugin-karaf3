@@ -9,7 +9,6 @@
    <keepalive-delay xmlns="urn:opendaylight:netconf-node-topology">0</keepalive-delay>
  </node>
 
- java -jar netconf-testtool-1.2.0-Carbon-executable.jar --device-count 3 --devices-per-port 3
- --debug true --schemas-dir ../../schemas/
+ java -jar netconf-testtool-1.2.2-SNAPSHOT-executable.jar --device-count 3 --devices-per-port 3 --debug true --schemas-dir ../../schemas/
 
 /home/dingrui37/Downloads/p4plugin-newest/p4plugin-karaf3/
