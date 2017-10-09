@@ -21,10 +21,11 @@ import java.util.concurrent.Future;
 
 public class PacketServiceProvider implements P4pluginCorePacketService {
     private static final Logger LOG = LoggerFactory.getLogger(PacketServiceProvider.class);
+    private final DeviceManager manager =  DeviceManager.getInstance();
     public Future<RpcResult<Void>> p4TransmitPacket(P4TransmitPacketInput input) {
         Preconditions.checkArgument(input != null, "Transmit packet input is null.");
         try {
-            DeviceManager.findConfiguredDevice(input.getNodeId()).transmitPacket(input.getPayload());
+            manager.findConfiguredDevice(input.getNodeId()).transmitPacket(input.getPayload());
         } catch (Exception e) {
             e.printStackTrace();
         }
