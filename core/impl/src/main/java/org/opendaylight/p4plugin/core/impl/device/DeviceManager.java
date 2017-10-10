@@ -84,7 +84,7 @@ public class DeviceManager {
     public P4Device addDevice(String nodeId, Long deviceId, String ip, Integer port,
                               String runtimeFile, String configFile) throws IOException {
         Preconditions.checkArgument(runtimeFile != null, "Runtime file is null.");
-        Preconditions.checkArgument(configFile != null, "Config file is null.");
+        //Preconditions.checkArgument(configFile != null, "Config file is null.");
         String description = String.format("%s:%d:%s:%d", nodeId, deviceId, ip, port);
 
         if (isDuplicateDevice(nodeId, ip, port, deviceId)) {
