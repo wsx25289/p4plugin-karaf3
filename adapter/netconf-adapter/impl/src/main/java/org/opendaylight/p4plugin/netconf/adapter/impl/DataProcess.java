@@ -148,7 +148,7 @@ public class DataProcess {
 
     private NodeInterfacesState constructInterfacesState(String nodeId) {
         if (nodeId.equals("node0")) {
-            return construct("node0", "10.42.94.144", 50051, "0");
+            return construct("node0", "10.8.8.143", 50051, "0");
         }
         if (nodeId.equals("node1")) {
             return construct("node1", "10.42.94.144", 50052, "1");

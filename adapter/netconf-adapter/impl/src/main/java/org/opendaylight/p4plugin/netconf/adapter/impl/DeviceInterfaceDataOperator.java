@@ -93,8 +93,8 @@ public class DeviceInterfaceDataOperator {
         builder.setGrpcServerIp(ip);
         builder.setGrpcServerPort(port);
         builder.setDeviceId(deviceId);
-        builder.setRuntimeFile("/home/opendaylight/odl/p4src/simple_router_action_profile.proto.txt");
-        builder.setConfigFile("/home/opendaylight/odl/p4src/simple_router_action_profile.json");
+        builder.setRuntimeFile("/home/opendaylight/odl/p4src/switch.proto.txt");
+        builder.setConfigFile(null);
         return builder.build();
     }
 
