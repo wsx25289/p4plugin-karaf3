@@ -321,7 +321,6 @@ public class P4Device {
 
     public boolean isConfigured() {
         return runtimeInfo != null
-            && deviceConfig != null
             && state == State.Configured;
     }
 
