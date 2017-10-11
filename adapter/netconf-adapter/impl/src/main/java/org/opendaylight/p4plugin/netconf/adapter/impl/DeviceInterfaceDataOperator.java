@@ -100,7 +100,7 @@ public class DeviceInterfaceDataOperator {
 
     private SetPipelineConfigInput constructRpcSetPipelineConfigInput(String nodeId) {
         SetPipelineConfigInputBuilder builder = new SetPipelineConfigInputBuilder();
-        builder.setNodeId(nodeId);
+        builder.setNodeId(nodeId.substring(nodeId.length() - 1, nodeId.length()));
         return builder.build();
     }
 
