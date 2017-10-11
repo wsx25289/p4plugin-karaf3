@@ -89,7 +89,7 @@ public class DeviceInterfaceDataOperator {
 
     private AddNodeInput constructRpcAddNodeInput(String nodeId, Ipv4Address ip, PortNumber port, BigInteger deviceId) {
         AddNodeInputBuilder builder = new AddNodeInputBuilder();
-        builder.setNodeId(nodeId);
+        builder.setNodeId(nodeId.substring(nodeId.length() - 1, nodeId.length()));
         builder.setGrpcServerIp(ip);
         builder.setGrpcServerPort(port);
         builder.setDeviceId(deviceId);
